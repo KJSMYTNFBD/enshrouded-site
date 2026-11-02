@@ -1,4 +1,5 @@
-/* 霧鎖王國 介紹頁：滾動場景與互動（main.js 由 build.py 從本檔產生） */
+/* Enshrouded 1.0 intro page — scroll scenes and interactions.
+   tools/build.py inlines data/tree-data.json and data/sets-data.json into site/main.js. */
 (() => {
   'use strict';
   const TREE = __TREE__;
@@ -12,20 +13,20 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const isMobile = () => innerWidth <= 760;
-  const fmt = n => n.toLocaleString('en-US');
-  function progressOf(el) {
-    const r = el.getBoundingClientRect();
-    const total = r.height - innerHeight;
-    return total <= 0 ? 0 : clamp(-r.top / total, 0, 1);
-  }
+  const vh = () => innerHeight;
   const vis = el => { const r = el.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+  // screens scrolled inside a pinned section, and the total it can scroll
+  function pinState(el) {
+    const r = el.getBoundingClientRect();
+    const total = Math.max(1, r.height - innerHeight);
+    const y = clamp(-r.top, 0, total);
+    return { u: y / innerHeight, p: y / total };
+  }
+  const stripTags = s => s.replace(/<[^>]+>/g, '');
 
   /* ---------- reveal ---------- */
   const groups = new Map();
-  $$('[data-rv]').forEach(el => {
-    const p = el.parentElement; const i = groups.get(p) || 0; groups.set(p, i + 1);
-    el.style.setProperty('--d', Math.min(i, 4) * 70 + 'ms');
-  });
+  $$('[data-rv]').forEach(el => { const p = el.parentElement; const i = groups.get(p) || 0; groups.set(p, i + 1); el.style.setProperty('--d', Math.min(i, 4) * 70 + 'ms'); });
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
   $$('[data-rv]').forEach(el => io.observe(el));
   let pendingRv = $$('[data-rv]');
@@ -37,6 +38,18 @@
       if (el.getBoundingClientRect().top < lim) { el.classList.add('in'); io.unobserve(el); return false; }
       return true;
     });
+  }
+
+  /* ---------- backdrop: in-game pictures behind every section ---------- */
+  const backImgs = $$('.backdrop img');
+  const bgSecs = $$('[data-bg]').filter(el => !el.classList.contains('backdrop'));
+  let curBack = '';
+  function renderBackdrop() {
+    const mid = innerHeight / 2;
+    let key = '';
+    for (const s of bgSecs) { const r = s.getBoundingClientRect(); if (r.top <= mid && r.bottom >= mid) key = s.dataset.bg; }
+    if (!key) { for (const s of bgSecs) { const r = s.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) { key = s.dataset.bg; break; } } }
+    if (key && key !== curBack) { curBack = key; backImgs.forEach(i => i.classList.toggle('on', i.dataset.bg === key)); }
   }
 
   /* ---------- canvases ---------- */
@@ -75,59 +88,45 @@
   }
 
   /* ---------- BOSS PARADE ---------- */
-  const REG = {
-    'springlands': ['長春平原', 'Springlands'], 'revelwood': ['喧囂森林', 'Revelwood'], 'nomad-highlands': ['遊牧高地', 'Nomad Highlands'],
-    'kindlewastes': ['星火荒原', 'Kindlewastes'], 'albaneve-summits': ['阿爾班伊維高峰', 'Albaneve Summits'], 'veilwater-basin': ['面紗水盆地', 'Veilwater Basin'],
-    'cinders-cradle': ['餘燼搖籃', "Cinder's Cradle"], 'hollow-halls': ['Hollow Halls', '霧幕下的空洞地城'],
-  };
+  const REG = { 'springlands': 'Springlands', 'revelwood': 'Revelwood', 'nomad-highlands': 'Nomad Highlands', 'kindlewastes': 'Kindlewastes', 'albaneve-summits': 'Albaneve Summits', 'veilwater-basin': 'Veilwater Basin', 'cinders-cradle': "Cinder's Cradle", 'hollow-halls': 'Hollow Halls' };
   const parade = $('#bosses');
   const bosses = $$('#bossList .boss');
-  const bgs = $$('.pv-bg');
+  const pbgs = $$('.pv-bg');
   const intro = $('#pvIntro'), regionEl = $('#pvRegion'), pvBar = $('#pvBar');
-  const INTRO = 1.4, STEP = 0.66;
-  const NB = bosses.length;
-  function sizeParade() { if (!RM) parade.style.height = `calc(100svh * ${(INTRO + NB * STEP + 1.3).toFixed(2)})`; }
+  const INTRO = 1.4, STEP = 0.66, NB = bosses.length;
   const fog = makeFx($('#fogFx'));
+  $('#fogFx').style.filter = 'blur(40px)';
   const blobs = Array.from({ length: 14 }, () => ({ x: Math.random(), y: Math.random(), r: 0.25 + Math.random() * 0.35, vx: (Math.random() - 0.5) * 0.0006, vy: -0.0002 - Math.random() * 0.0005, a: 0.25 + Math.random() * 0.35 }));
-  let curBoss = -2, curReg = '';
+  let curReg = '';
   function setRegion(reg) {
     if (reg === curReg) return;
     curReg = reg;
-    bgs.forEach(b => b.classList.toggle('on', b.dataset.reg === reg));
-    if (REG[reg]) { regionEl.querySelector('b').textContent = REG[reg][0]; regionEl.querySelector('span').textContent = REG[reg][1]; regionEl.classList.add('on'); }
-    else regionEl.classList.remove('on');
+    pbgs.forEach(b => b.classList.toggle('on', b.dataset.reg === reg));
+    if (REG[reg]) { regionEl.textContent = REG[reg]; regionEl.classList.add('on'); } else regionEl.classList.remove('on');
   }
   function renderParade() {
-    const total = parade.offsetHeight - innerHeight;
-    const y = clamp(-parade.getBoundingClientRect().top, 0, total);
-    const u = y / innerHeight; // screens scrolled inside parade
-    // intro
+    const { u } = pinState(parade);
     const ia = u < INTRO ? (u < 0.15 ? 1 : 1 - smooth(clamp((u - 0.75) / (INTRO - 0.75), 0, 1))) : 0;
     intro.style.opacity = ia.toFixed(3);
     intro.style.transform = `translateY(${(1 - ia) * -30}px) scale(${1 + (1 - ia) * 0.04})`;
-    const bu = (u - INTRO) / STEP; // boss units
+    const bu = (u - INTRO) / STEP;
     const idx = bu < 0 ? -1 : Math.min(NB - 1, Math.floor(bu));
     setRegion(idx < 0 ? 'shroud' : bosses[idx].dataset.reg);
+    const mob = isMobile();
     bosses.forEach((b, i) => {
-      const t = bu - i; // 0..1 while active
+      const t = bu - i;
       if (t < -0.05 || t > 1.05) { if (b.classList.contains('on')) { b.classList.remove('on'); b.style.opacity = 0; } return; }
       b.classList.add('on');
-      const last = i === NB - 1;
       const enter = smooth(clamp(t / 0.28, 0, 1));
-      const leave = last ? 0 : smooth(clamp((t - 0.78) / 0.22, 0, 1));
+      const leave = i === NB - 1 ? 0 : smooth(clamp((t - 0.78) / 0.22, 0, 1));
       const dir = b.classList.contains('b-l') ? -1 : 1;
-      const img = b.firstElementChild, txt = b.lastElementChild;
-      const mob = isMobile();
-      img.style.transform = `translate3d(${(1 - enter) * dir * (mob ? 60 : 160) + leave * dir * -60}px,${(1 - enter) * 30}px,0) scale(${0.92 + 0.08 * enter})`;
-      txt.style.transform = `translate3d(${(1 - enter) * -dir * (mob ? 40 : 90) + leave * -dir * 40}px,0,0)`;
+      b.firstElementChild.style.transform = `translate3d(${(1 - enter) * dir * (mob ? 60 : 160) + leave * dir * -60}px,${(1 - enter) * 30}px,0) scale(${0.92 + 0.08 * enter})`;
+      b.lastElementChild.style.transform = `translate3d(${(1 - enter) * -dir * (mob ? 40 : 90) + leave * -dir * 40}px,0,0)`;
       b.style.opacity = (enter * (1 - leave)).toFixed(3);
     });
-    curBoss = idx;
     pvBar.style.width = (clamp(bu / NB, 0, 1) * 100) + '%';
-    // background drift
-    const on = bgs.find(b => b.classList.contains('on'));
+    const on = pbgs.find(b => b.classList.contains('on'));
     if (on && !RM) on.style.transform = `scale(${1.02 + 0.03 * Math.sin(u * 0.6)}) translateX(${Math.sin(u * 0.9) * 1.2}%)`;
-    // fog
     const { ctx, st } = fog;
     ctx.clearRect(0, 0, st.w, st.h);
     if (RM) return;
@@ -135,29 +134,22 @@
     ctx.globalCompositeOperation = 'lighter';
     blobs.forEach(o => {
       o.x += o.vx; o.y += o.vy; if (o.y < -0.4) { o.y = 1.3; o.x = Math.random(); }
-      const R = o.r * Math.max(st.w, st.h);
       ctx.fillStyle = `rgba(150,22,40,${o.a * 0.22 * strength})`;
-      ctx.beginPath(); ctx.arc(o.x * st.w, o.y * st.h, R, 0, 6.283); ctx.fill();
+      ctx.beginPath(); ctx.arc(o.x * st.w, o.y * st.h, o.r * Math.max(st.w, st.h), 0, 6.283); ctx.fill();
     });
     ctx.globalCompositeOperation = 'source-over';
   }
-  // starting background for the transition
-  (() => {
-    const img = document.createElement('img');
-    img.className = 'pv-bg'; img.dataset.reg = 'shroud'; img.src = 'media/bg/shroud.jpg'; img.alt = ''; img.setAttribute('aria-hidden', 'true');
-    $('.pv-bgs').prepend(img); bgs.unshift(img);
-  })();
-  $('#fogFx').style.filter = 'blur(40px)';
 
-  /* ---------- SKILL TREE (1.0 game data) ---------- */
+  /* ---------- SKILL TREE: scroll tour through the twelve archetypes, then free play ---------- */
   const ARCH = [
-    ['生存者', 'Survivor', 'R', 225], ['馴獸師', 'Beastmaster', 'R', 255], ['遊俠', 'Ranger', 'R', 285], ['刺客', 'Assassin', 'R', 315],
-    ['詭術師', 'Trickster', 'M', 345], ['巫師', 'Wizard', 'M', 15], ['治療者', 'Healer', 'M', 45], ['戰鬥法師', 'Battlemage', 'M', 75],
-    ['守護者', 'Guardian', 'W', 105], ['戰士', 'Warrior', 'W', 135], ['野蠻人', 'Barbarian', 'W', 165], ['運動員', 'Athlete', 'W', 195],
+    ['Survivor', 'R', 225], ['Beastmaster', 'R', 255], ['Ranger', 'R', 285], ['Assassin', 'R', 315],
+    ['Trickster', 'M', 345], ['Wizard', 'M', 15], ['Healer', 'M', 45], ['Battlemage', 'M', 75],
+    ['Guardian', 'W', 105], ['Warrior', 'W', 135], ['Barbarian', 'W', 165], ['Athlete', 'W', 195],
   ];
+  const ATTR = { R: 'Dexterity', M: 'Intelligence', W: 'Strength' };
   const CLS = ['N', 'W', 'M', 'R'];
-  const COL = { N: '#ffb100', W: '#d4473f', M: '#4f95e0', R: '#74c23a' };
-  const TYPE = ['起點火花', '屬性節點', '被動技能', '主動技能'];
+  const COL = { N: '#ffb100', W: '#e0524a', M: '#5aa2ee', R: '#7fcc44' };
+  const TYPE = ['Starting spark', 'Attribute', 'Passive skill', 'Active skill'];
   const MAXPTS = 212;
   const nodes = TREE.n.map(([x, y, c, t, name, cost, lv, arch, icon, desc], i) => ({ i, x, y, c: CLS[c], t, name, cost, lv, arch, icon, desc, level: 0, adj: [] }));
   TREE.l.forEach(([a, b]) => { nodes[a].adj.push(b); nodes[b].adj.push(a); });
@@ -167,126 +159,166 @@
   const gL = mk('g', {}, svg), gN = mk('g', {}, svg), gA = mk('g', {}, svg);
   const linkEls = TREE.l.map(([a, b]) => {
     const A = nodes[a], B = nodes[b];
-    const c = A.c !== 'N' ? A.c : B.c;
     const l = mk('line', { x1: A.x, y1: A.y, x2: B.x, y2: B.y, class: 'lk' }, gL);
-    l.style.setProperty('--c', COL[c]); return { l, a, b };
+    l.style.setProperty('--c', COL[A.c !== 'N' ? A.c : B.c]); return { l, a, b };
   });
   const R = [70, 40, 58, 92];
   nodes.forEach(n => {
-    const g = mk('g', { class: 'nd', tabindex: '0', role: 'button', 'aria-label': `${n.name}，${TYPE[n.t]}` }, gN);
+    const g = mk('g', { class: 'nd', tabindex: '0', role: 'button', 'aria-label': `${n.name}, ${TYPE[n.t]}` }, gN);
     g.style.setProperty('--c', COL[n.c]);
+    mk('circle', { cx: n.x, cy: n.y, r: R[n.t], class: 'ring' }, g);
     mk('circle', { cx: n.x, cy: n.y, r: R[n.t], class: 'b' }, g);
     if (n.icon) mk('image', { href: 'media/' + n.icon, x: n.x - 70, y: n.y - 70, width: 140, height: 140 }, g);
     n.el = g;
     g.addEventListener('click', () => clickNode(n));
     g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); clickNode(n); } });
-    g.addEventListener('mouseenter', () => showNode(n));
-    g.addEventListener('focus', () => showNode(n));
+    g.addEventListener('mouseenter', () => { if (manual) showNode(n); });
   });
-  const archBtns = $('#archBtns');
-  ARCH.forEach(([zh, en, c, ang], k) => {
-    const a = ang * Math.PI / 180, r = 2650;
-    const t = mk('text', { x: Math.cos(a) * r, y: Math.sin(a) * r + 50, 'text-anchor': 'middle', class: 'al' }, gA);
-    t.style.setProperty('--c', COL[c]); t.textContent = zh;
-    t.addEventListener('click', () => focusArch(k));
-    const b = document.createElement('button');
-    b.type = 'button'; b.textContent = zh; b.title = en; b.style.setProperty('--c', COL[c]); b.setAttribute('aria-pressed', 'false');
-    b.addEventListener('click', () => focusArch(b.getAttribute('aria-pressed') === 'true' ? -1 : k));
-    archBtns.appendChild(b);
+  ARCH.forEach(([name, c, ang]) => {
+    const a = ang * Math.PI / 180;
+    const t = mk('text', { x: Math.cos(a) * 2650, y: Math.sin(a) * 2650 + 50, 'text-anchor': 'middle', class: 'al' }, gA);
+    t.style.setProperty('--c', COL[c]); t.textContent = name;
   });
-  let vb = [-2900, -2900, 5800, 5800], vbAnim = null;
-  function animateVB(to) {
-    if (RM) { vb = to; svg.setAttribute('viewBox', to.join(' ')); return; }
-    const from = vb.slice(), t0 = performance.now();
-    cancelAnimationFrame(vbAnim);
-    const step = now => {
-      const t = easeOut(clamp((now - t0) / 650, 0, 1));
-      vb = from.map((v, i) => lerp(v, to[i], t));
-      svg.setAttribute('viewBox', vb.map(v => v.toFixed(1)).join(' '));
-      if (t < 1) vbAnim = requestAnimationFrame(step);
-    };
-    vbAnim = requestAnimationFrame(step);
+  // the tour path for each archetype: shortest route from any starting spark to its outermost active skill
+  const sparks = nodes.filter(n => n.t === 0).map(n => n.i);
+  function pathTo(target) {
+    const prev = new Map(sparks.map(s => [s, -1])); const q = [...sparks];
+    while (q.length) { const i = q.shift(); if (i === target) break; for (const j of nodes[i].adj) if (!prev.has(j)) { prev.set(j, i); q.push(j); } }
+    const path = []; for (let i = target; i !== -1 && i !== undefined; i = prev.get(i)) path.unshift(i);
+    return path;
   }
-  function focusArch(k) {
-    [...archBtns.children].forEach((b, j) => b.setAttribute('aria-pressed', j === k));
-    nodes.forEach(n => n.el.classList.toggle('dim', k >= 0 && n.arch !== k && n.t !== 0));
-    if (k < 0) { animateVB([-2900, -2900, 5800, 5800]); return; }
-    const a = ARCH[k][3] * Math.PI / 180, cx = Math.cos(a) * 1650, cy = Math.sin(a) * 1650, s = 2900;
-    animateVB([cx - s / 2, cy - s / 2, s, s]);
-    const sig = nodes.filter(n => n.arch === k && n.t === 3).sort((p, q) => Math.hypot(q.x, q.y) - Math.hypot(p.x, p.y))[0];
-    if (sig) showNode(sig, true);
+  const TOUR = ARCH.map((A, k) => {
+    const pool = nodes.filter(n => n.arch === k);
+    const dist = n => Math.hypot(n.x, n.y);
+    const target = (pool.filter(n => n.t === 3).sort((a, b) => dist(b) - dist(a))[0]) || pool.sort((a, b) => dist(b) - dist(a))[0];
+    const path = pathTo(target.i);
+    const steps = [];
+    path.forEach(i => { const n = nodes[i]; const top = (n.t === 3 || i === target.i) ? n.lv : 1; for (let l = 1; l <= top; l++) steps.push([i, l]); });
+    return { k, target: target.i, steps };
+  });
+  let vb = [-2900, -2900, 5800, 5800], vbTo = vb.slice();
+  function setVB(to) { vbTo = to; }
+  function stepVB() {
+    if (RM) vb = vbTo.slice(); else vb = vb.map((v, i) => lerp(v, vbTo[i], 0.12));
+    svg.setAttribute('viewBox', vb.map(v => v.toFixed(1)).join(' '));
   }
-  $('#treeAll').addEventListener('click', () => focusArch(-1));
-  const learned = () => nodes.filter(n => n.level > 0);
-  const points = () => nodes.reduce((s, n) => s + n.level * n.cost, 0);
+  const skCard = $('#skCard'), skSteps = $('#skSteps'), skHint = $('#skHint');
+  let manual = false, tourArch = -2, tourStep = -1, selNode = null;
+  function points() { return nodes.reduce((s, n) => s + n.level * n.cost, 0); }
   const available = n => n.t === 0 || n.adj.some(j => nodes[j].level > 0);
   function prune() {
-    // drop learned nodes that are no longer connected to a learned start spark
     const seen = new Set(); const q = nodes.filter(n => n.t === 0 && n.level > 0).map(n => n.i);
     q.forEach(i => seen.add(i));
     while (q.length) { const i = q.shift(); nodes[i].adj.forEach(j => { if (nodes[j].level > 0 && !seen.has(j)) { seen.add(j); q.push(j); } }); }
     nodes.forEach(n => { if (n.level > 0 && !seen.has(n.i)) n.level = 0; });
   }
-  let selNode = null;
-  function clickNode(n) {
-    showNode(n, true);
-    if (!available(n) && n.level === 0) { n.el.animate && !RM && n.el.animate([{ opacity: 1 }, { opacity: 0.3 }, { opacity: 1 }], { duration: 300 }); flashMsg('要先點亮相鄰的節點'); return; }
-    if (n.level < n.lv) {
-      if (points() + n.cost > MAXPTS) { flashMsg('已經用滿 212 點'); return; }
-      n.level++;
-    } else { n.level = 0; prune(); }
-    syncTree(); showNode(n, true);
-  }
-  let msgT = 0;
-  function flashMsg(m) { const c = $('#ncCost'); c.textContent = m; c.style.color = 'var(--flame-hi)'; clearTimeout(msgT); msgT = setTimeout(() => { c.style.color = ''; showNode(selNode, true); }, 1400); }
   function syncTree() {
     nodes.forEach(n => {
       n.el.classList.toggle('on', n.level > 0);
       n.el.classList.toggle('av', n.level === 0 && available(n));
       n.el.setAttribute('aria-pressed', n.level > 0);
       let t = n.el.querySelector('.lvl');
-      if (n.lv > 1 && n.level > 0) {
-        if (!t) { t = mk('text', { x: n.x + R[n.t] * 0.8, y: n.y - R[n.t] * 0.8, class: 'lvl' }, n.el); }
-        t.textContent = n.level;
-      } else if (t) t.remove();
+      if (n.lv > 1 && n.level > 0) { if (!t) t = mk('text', { x: n.x + R[n.t] * 0.8, y: n.y - R[n.t] * 0.8, class: 'lvl' }, n.el); t.textContent = n.level; }
+      else if (t) t.remove();
     });
     linkEls.forEach(({ l, a, b }) => l.classList.toggle('on', nodes[a].level > 0 && nodes[b].level > 0));
-    const by = { W: 0, M: 0, R: 0 }, per = {};
-    nodes.forEach(n => { if (n.level > 0) { if (by[n.c] !== undefined) by[n.c] += n.level * n.cost; if (n.arch >= 0) per[n.arch] = (per[n.arch] || 0) + n.level * n.cost; } });
-    const P = points();
-    $('#buildPts').textContent = `${P} / ${MAXPTS} 點`;
-    ['W', 'M', 'R'].forEach(c => { $('#m' + c).style.width = Math.min(100, by[c] / 80 * 100) + '%'; });
-    const top = Object.entries(per).sort((a, b) => b[1] - a[1]).map(([k]) => ARCH[k][0]);
-    $('#buildName').textContent = !top.length ? '從中央的火花開始點。' : top.length === 1 ? `你的流派：純${top[0]}` : `你的流派：${top[0]} × ${top[1]}${top.length > 2 ? `，再帶點${top[2]}` : ''}`;
+    const by = { W: 0, M: 0, R: 0 };
+    nodes.forEach(n => { if (n.level > 0 && by[n.c] !== undefined) by[n.c] += n.level * n.cost; });
+    $('#buildPts').textContent = points();
+    ['W', 'M', 'R'].forEach(c => { $('#m' + c).style.width = Math.min(100, by[c] / 60 * 100) + '%'; });
   }
-  function showNode(n, sel) {
+  function showNode(n, opts = {}) {
     if (!n) return;
-    if (sel) { if (selNode) selNode.el.classList.remove('sel'); selNode = n; n.el.classList.add('sel'); }
-    const arch = n.arch >= 0 ? `・${ARCH[n.arch][0]} ${ARCH[n.arch][1]}` : (n.c === 'N' ? '・中央' : '');
-    $('#ncType').textContent = TYPE[n.t] + arch;
-    $('#ncName').textContent = n.name;
-    $('#ncDesc').innerHTML = n.desc.map(d => `<p>${d}</p>`).join('');
-    $('#ncCost').textContent = `每級 ${n.cost} 點${n.lv > 1 ? `，最多 ${n.lv} 級` : ''}${n.level ? `・目前 ${n.level} 級` : ''}`;
+    if (selNode) selNode.el.classList.remove('sel');
+    selNode = n; n.el.classList.add('sel');
+    const arch = n.arch >= 0 ? ARCH[n.arch] : null;
+    skCard.style.setProperty('--c', COL[n.c]);
+    $('#skArch').textContent = (opts.tour !== undefined ? `${ARCH[opts.tour][0]} · ${ATTR[ARCH[opts.tour][1]]}` : (arch ? `${arch[0]} · ${TYPE[n.t]}` : `Centre · ${TYPE[n.t]}`));
+    $('#skName').textContent = n.name;
+    $('#skDesc').innerHTML = n.desc.map(d => `<p>${d}</p>`).join('');
+    $('#skMeta').textContent = `${TYPE[n.t]} · ${n.cost} point${n.cost > 1 ? 's' : ''} per level${n.lv > 1 ? ` · level ${Math.max(n.level, 1)} of ${n.lv}` : ''}`;
+    if (opts.bump && !RM) { skCard.classList.remove('bump'); void skCard.offsetWidth; skCard.classList.add('bump'); }
   }
-  $('#buildReset').addEventListener('click', () => { nodes.forEach(n => n.level = 0); syncTree(); });
+  function pop(n) { if (RM) return; n.el.classList.remove('pop'); void n.el.getBBox(); n.el.classList.add('pop'); }
+  function dimTo(k) { nodes.forEach(n => n.el.classList.toggle('dim', k >= 0 && n.arch !== k && n.t !== 0 && n.arch !== -1)); }
+  function zoomArch(k) {
+    if (k < 0) { setVB([-2900, -2900, 5800, 5800]); return; }
+    const a = ARCH[k][2] * Math.PI / 180, s = 3000;
+    const cx = Math.cos(a) * 1500, cy = Math.sin(a) * 1500;
+    setVB([cx - s / 2, cy - s / 2, s, s]);
+  }
+  function renderStepDots(T, done) {
+    if (skSteps.childElementCount !== T.steps.length || skSteps.dataset.k != T.k) {
+      skSteps.dataset.k = T.k;
+      skSteps.innerHTML = T.steps.map(() => '<span></span>').join('');
+    }
+    skSteps.style.setProperty('--c', COL[ARCH[T.k][1]]);
+    [...skSteps.children].forEach((s, i) => { s.classList.toggle('done', i <= done); s.classList.toggle('cur', i === done); });
+  }
+  const skills = $('#skills');
+  const TOUR_IN = 0.5, TOUR_STEP = 0.8;
+  function sizeSkills() { skills.style.height = RM ? '' : `calc(100svh * ${(1 + TOUR_IN + ARCH.length * TOUR_STEP + 0.6).toFixed(2)})`; }
+  function renderSkillsTour() {
+    if (manual) return;
+    const { u } = pinState(skills);
+    const tu = (u - TOUR_IN) / TOUR_STEP;
+    const k = tu < 0 ? -1 : tu >= ARCH.length ? -2 : Math.floor(tu);
+    if (k !== tourArch) {
+      tourArch = k; tourStep = -1;
+      nodes.forEach(n => n.level = 0);
+      dimTo(k >= 0 ? k : -1); zoomArch(k);
+      if (k < 0) {
+        skSteps.innerHTML = '';
+        syncTree();
+        showNode(nodes.find(n => n.name === 'Airborne Architect') || nodes[0]);
+        $('#skArch').textContent = k === -1 ? 'New in 1.0 · centre of the tree' : 'Your turn';
+        skHint.textContent = k === -1 ? 'Keep scrolling to watch each archetype level up.' : 'Click any glowing node next to a lit one and build your own.';
+        if (k === -2) { manual = true; skHint.textContent = 'Your turn: click a starting spark (the gold ring) and build your own.'; }
+      }
+    }
+    if (k < 0) return;
+    const T = TOUR[k];
+    const f = clamp((tu - k) / 0.85, 0, 1);
+    const s = Math.min(T.steps.length - 1, Math.floor(f * T.steps.length));
+    if (s !== tourStep) {
+      nodes.forEach(n => n.level = 0);
+      for (let i = 0; i <= s; i++) { const [ni, l] = T.steps[i]; nodes[ni].level = Math.max(nodes[ni].level, l); }
+      syncTree();
+      const [ni] = T.steps[s];
+      if (s > tourStep) pop(nodes[ni]);
+      tourStep = s;
+      showNode(nodes[ni], { tour: k, bump: true });
+      renderStepDots(T, s);
+      skHint.textContent = `${ARCH[k][0]}: ${s + 1} of ${T.steps.length} upgrades on the way to ${nodes[T.target].name}.`;
+    }
+  }
+  function clickNode(n) {
+    if (!manual) { manual = true; nodes.forEach(m => m.level = 0); dimTo(-1); skSteps.innerHTML = ''; syncTree(); skHint.textContent = 'You took over. Start from a gold spark; click a node again at its top level to remove it.'; }
+    if (!available(n) && n.level === 0) { showNode(n); $('#skMeta').textContent = 'Learn a neighbouring node first.'; return; }
+    if (n.level < n.lv) { if (points() + n.cost > MAXPTS) { $('#skMeta').textContent = 'All 212 points are spent.'; return; } n.level++; pop(n); }
+    else { n.level = 0; prune(); }
+    syncTree(); showNode(n, { bump: true });
+  }
+  $('#buildReset').addEventListener('click', () => { manual = false; tourArch = -3; nodes.forEach(n => n.level = 0); syncTree(); });
   syncTree();
-  showNode(nodes.find(n => n.name === 'Airborne Architect') || nodes[0], true);
+  showNode(nodes.find(n => n.name === 'Airborne Architect') || nodes[0]);
+  if (RM) { manual = true; skHint.textContent = 'Click a starting spark (the gold ring) and build your own.'; }
 
   /* ---------- LOOT ---------- */
   const loot = $('#loot'), frame = $('#chestFrame'), openImg = $('#chestOpen');
   const keyGlow = $('#keyGlow'), seam = $('#seam'), flash = $('#flash');
-  const lootA = $('#lootA'), lootB = $('#lootB'), lootNote = $('#lootNote');
+  const lootA = $('#lootA'), lootB = $('#lootB');
   const cards = $$('#lootCards .lc');
   const lootFx = makeFx($('#lootFx'));
-  const sparks = [];
+  const sparksFx = [];
   function chestGeom() {
     const W = innerWidth, H = innerHeight, mob = isMobile();
-    const fw = mob ? W * 2.3 : Math.max(W, H * 1.7872), fh = fw / 1.7872;
-    const top = mob ? H * 0.46 : H / 2;
+    const fw = Math.max(mob ? W * 2.3 : W, H * 1.7872), fh = fw / 1.7872;
+    const top = H / 2;
     return { W, H, fw, fh, cx: (W - fw) / 2 + fw * 0.486, cy: top - fh / 2 + fh * 0.6 };
   }
   function renderLoot() {
-    const p = progressOf(loot), g = chestGeom();
+    const { p } = pinState(loot), g = chestGeom();
     const push = p < 0.49 ? 1 + 0.14 * smooth(clamp(p / 0.46, 0, 1)) : 1.14 - 0.1 * smooth(clamp((p - 0.49) / 0.2, 0, 1));
     let sx = 0, sy = 0;
     if (p > 0.3 && p < 0.49) { const amp = 6 * smooth((p - 0.3) / 0.19); const tt = performance.now() / 38; sx = Math.sin(tt * 1.7) * amp; sy = Math.cos(tt * 2.3) * amp * 0.6; }
@@ -298,20 +330,21 @@
     lootA.style.opacity = (1 - smooth(clamp((p - 0.22) / 0.1, 0, 1))).toFixed(3);
     const bIn = smooth(clamp((p - 0.6) / 0.1, 0, 1));
     lootB.style.opacity = bIn.toFixed(3); lootB.style.transform = `translateY(${(1 - bIn) * 20}px)`;
-    lootNote.style.opacity = p > 0.72 ? 1 : 0;
     const mob = isMobile();
-    const cw = mob ? 108 : 200, gap = mob ? 10 : 28;
-    const rowW = cards.length * cw + (cards.length - 1) * gap;
+    const perRow = mob ? 3 : cards.length;
+    const gap = mob ? 8 : 18;
+    const cw = mob ? 104 : Math.min(180, (g.W - 96 - (perRow - 1) * gap) / perRow);
+    cards.forEach(c => { c.style.width = cw + 'px'; });
+    const rowW = perRow * cw + (perRow - 1) * gap;
     cards.forEach((c, i) => {
-      const q = clamp((p - 0.52 - i * 0.03) / 0.12, 0, 1);
-      const tx = g.W / 2 - rowW / 2 + i * (cw + gap);
-      const ty = g.H - (mob ? 250 : 330);
+      const q = clamp((p - 0.52 - i * 0.025) / 0.12, 0, 1);
+      const row = Math.floor(i / perRow), col = i % perRow;
+      const tx = g.W / 2 - rowW / 2 + col * (cw + gap);
+      const ty = g.H - (mob ? 360 : 300) + row * (mob ? 170 : 0);
       const x = lerp(g.cx - cw / 2, tx, easeOut(q));
-      const y = lerp(g.cy - 90, ty, easeBack(q)) - Math.sin(Math.PI * q) * (mob ? 120 : 200);
+      const y = lerp(g.cy - 90, ty, easeBack(q)) - Math.sin(Math.PI * q) * (mob ? 120 : 220);
       c.style.opacity = q > 0 ? Math.min(1, q * 3) : 0;
-      c.style.transform = `translate3d(${x}px,${y}px,0) rotate(${(1 - q) * (i % 2 ? 22 : -22)}deg) scale(${0.4 + 0.6 * easeOut(q)})`;
-      const n = c.querySelector('.lc-n'); const v = Math.round(+n.dataset.n * easeOut(clamp((q - 0.4) / 0.6, 0, 1)));
-      n.textContent = fmt(v);
+      c.style.transform = `translate3d(${x}px,${y}px,0) rotate(${(1 - q) * (i % 2 ? 24 : -24)}deg) scale(${0.4 + 0.6 * easeOut(q)})`;
     });
     return { p, g };
   }
@@ -320,71 +353,60 @@
     if (!visible || RM) return;
     const { p, g } = state; const open = p >= 0.49;
     const rate = open ? (p < 0.7 ? 6 : 2) : (p > 0.3 ? 1 : 0.3);
-    for (let r = 0; r < rate; r++) if (Math.random() < Math.min(1, rate)) sparks.push({ x: g.cx + (Math.random() - 0.5) * g.fw * (open ? 0.12 : 0.2), y: g.cy - (open ? g.fh * 0.06 : -g.fh * 0.02), vx: (Math.random() - 0.5) * (open ? 2.2 : 0.4), vy: -(open ? 1.5 + Math.random() * 4 : 0.2 + Math.random() * 0.5), life: 0, max: 60 + Math.random() * 90, r: 0.8 + Math.random() * 2.2, gold: open });
+    for (let r = 0; r < rate; r++) if (Math.random() < Math.min(1, rate)) sparksFx.push({ x: g.cx + (Math.random() - 0.5) * g.fw * (open ? 0.12 : 0.2), y: g.cy - (open ? g.fh * 0.06 : -g.fh * 0.02), vx: (Math.random() - 0.5) * (open ? 2.2 : 0.4), vy: -(open ? 1.5 + Math.random() * 4 : 0.2 + Math.random() * 0.5), life: 0, max: 60 + Math.random() * 90, r: 0.8 + Math.random() * 2.2, gold: open });
     ctx.globalCompositeOperation = 'lighter';
-    for (let i = sparks.length - 1; i >= 0; i--) {
-      const s = sparks[i]; s.life++; s.x += s.vx; s.y += s.vy; s.vy *= 0.992; s.vx *= 0.99;
-      if (s.life > s.max) { sparks.splice(i, 1); continue; }
+    for (let i = sparksFx.length - 1; i >= 0; i--) {
+      const s = sparksFx[i]; s.life++; s.x += s.vx; s.y += s.vy; s.vy *= 0.992; s.vx *= 0.99;
+      if (s.life > s.max) { sparksFx.splice(i, 1); continue; }
       const a = 1 - s.life / s.max;
       ctx.fillStyle = s.gold ? `rgba(255,${190 + Math.random() * 50 | 0},110,${a})` : `rgba(255,200,140,${a * 0.45})`;
       ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.283); ctx.fill();
     }
     ctx.globalCompositeOperation = 'source-over';
-    if (sparks.length > 600) sparks.splice(0, sparks.length - 600);
+    if (sparksFx.length > 600) sparksFx.splice(0, sparksFx.length - 600);
   }
-  if (RM) cards.forEach(c => { const n = c.querySelector('.lc-n'); n.textContent = fmt(+n.dataset.n); });
 
-  /* ---------- GEAR ladder (real armor sets) ---------- */
-  const HOW = [
-    [/Crafted at the Blacksmith/, '鐵匠製作'], [/Crafted at the Hunter/, '獵人製作'], [/Crafted at the Alchemist/, '煉金術士製作'],
-    [/Crafted at the Ancient Researcher/, '遠古研究員製作'], [/Crafted by hand/, '徒手製作'], [/Drops from chests and bosses/, '寶箱與 BOSS 掉落'],
-    [/Drops in the Hollow Halls/, 'Hollow Halls 掉落'], [/Found near The Pike/, 'The Pike 附近取得'],
-  ];
-  const howZh = s => s.split(';').map(x => { x = x.trim(); const m = HOW.find(([re]) => re.test(x)); return m ? m[1] : x; }).join('、');
-  const NOTE = { Warrior: '主屬性力量與體質，物理護甲最高。', Ranger: '主屬性敏捷，物理與魔法護甲平均。弓手、遊俠、刺客都走這條。', Mage: '主屬性智力，魔法護甲最高。', Other: '不分職業或多職業通用的套裝，包含 Hollow Halls 掉落與 Vorgoth 的套裝。' };
-  const ladder = $('#ladder'), gearNote = $('#gearNote');
-  function setGear(cls, focusBtn) {
-    $$('#gearTabs button').forEach(b => { const on = b.dataset.cls === cls; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; if (on && focusBtn) b.focus(); });
-    const list = SETS.filter(s => cls === 'Other' ? (s[2] === 'Any' || s[2] === 'Multi-class') : s[2] === cls);
-    gearNote.textContent = `${list.length} 套・${NOTE[cls]}`;
-    const groups = []; list.forEach(s => { let g = groups.find(x => x.lv === s[0]); if (!g) groups.push(g = { lv: s[0], items: [] }); g.items.push(s); });
-    let d = 0;
-    ladder.innerHTML = groups.map(g => `<li class="lv"><p class="lv-h">Lv ${g.lv}<small>${g.items.length} 套</small></p>${g.items.map(s => `<div class="set" style="--d:${(d++) * 35}ms">${s[6] ? `<img src="${s[6]}" alt="" loading="lazy" width="96" height="96">` : ''}<b>${s[1]}</b><span>物理 ${s[4]}／魔法 ${s[5]}</span><span>${howZh(s[3])}</span></div>`).join('')}</li>`).join('');
-    ladder.parentElement.scrollLeft = 0;
-  }
-  const tabs = $$('#gearTabs button');
-  tabs.forEach((b, i) => {
-    b.addEventListener('click', () => setGear(b.dataset.cls));
-    b.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight') setGear(tabs[(i + 1) % tabs.length].dataset.cls, true);
-      if (e.key === 'ArrowLeft') setGear(tabs[(i + tabs.length - 1) % tabs.length].dataset.cls, true);
+  /* ---------- GEAR: three class columns that change with item level ---------- */
+  const HOW = [[/Blacksmith/, 'Crafted at the Blacksmith'], [/Hunter/, 'Crafted at the Hunter'], [/Alchemist/, 'Crafted at the Alchemist']];
+  const STOPS = ['5', '10', '15', '20', '30', '40', '45'];
+  const gear = $('#gear'), gearLv = $('#gearLv'), gearSteps = $('#gearSteps');
+  gearSteps.innerHTML = STOPS.map(s => `<span>Lv ${s}</span>`).join('');
+  const cols = $$('.gcol');
+  const pick = (cls, lv) => {
+    const list = SETS.filter(s => s[2] === cls && s[0] === lv);
+    const crafted = list.filter(s => /Crafted/.test(s[3]));
+    return { main: crafted[0] || list[0], also: list.filter(s => s !== (crafted[0] || list[0])) };
+  };
+  let curStop = -1;
+  function setStop(i) {
+    if (i === curStop) return; curStop = i;
+    const lv = STOPS[i];
+    gearLv.textContent = lv;
+    [...gearSteps.children].forEach((s, j) => s.classList.toggle('on', j === i));
+    cols.forEach(col => {
+      const { main, also } = pick(col.dataset.cls, lv);
+      const body = col.querySelector('.gc-body');
+      if (!main) { body.innerHTML = ''; return; }
+      const how = (HOW.find(([re]) => re.test(main[3])) || [, main[3].split(';')[0]])[1];
+      body.innerHTML = `${main[6] ? `<img src="${main[6]}" alt="" width="128" height="128">` : ''}<p class="gc-name">${main[1]}</p><div class="gc-stats"><span><b>${main[4]}</b>physical</span><span><b>${main[5]}</b>magical</span></div><p class="gc-how">${how}</p>${also.length ? `<p class="gc-also">Also at this level: ${also.map(s => s[1].replace(/ Set$/, '')).join(', ')}</p>` : ''}`;
+      if (!RM) { body.classList.remove('swap'); void body.offsetWidth; body.classList.add('swap'); }
     });
-  });
-  setGear('Warrior');
+  }
+  const GEAR_IN = 0.3, GEAR_STEP = 0.7;
+  const gearPin = $('#gearPin');
+  function sizeGear() { gearPin.style.height = RM ? '' : `calc(100svh * ${(1 + GEAR_IN + STOPS.length * GEAR_STEP + 0.3).toFixed(2)})`; }
+  function renderGear() {
+    const { u } = pinState(gearPin);
+    setStop(clamp(Math.floor((u - GEAR_IN) / GEAR_STEP), 0, STOPS.length - 1));
+  }
+  setStop(0);
 
-  /* ---------- WORLD (region data from the game files) ---------- */
-  const REGIONS = [
-    ['springlands', '長春平原', 'Springlands・含 Low Meadows', '林地與草原。Fell 佔據霧幕低地，Scavenger 盤踞 Rookmore、Westcott 等廢棄城鎮；鐵匠、煉金術士、木匠、農夫與獵人都從這裡的 Ancient Vault 救出。', '烈焰 2', '3–9', '8.4 km²', '567–1,402 m'],
-    ['revelwood', '喧囂森林', 'Revelwood・含黑沼澤 Blackmire', '茂密森林，餘火之谷的古都 Pikemead\'s Reach 就在裡面。子區域黑沼澤是一片沼地，喧囂森林的 Vukah 只住在那裡。', '烈焰 3', '11–15', '7.7 km²', '518–1,435 m'],
-    ['nomad-highlands', '遊牧高地', 'Nomad Highlands', '霧幕之上的石灰岩斷崖，位在地圖正中央、與其他所有區域相鄰。Pillars of Creation 是兩座與遠古族有關的巨大火山。', '烈焰 4', '16–20', '5 km²', '556–1,165 m'],
-    ['kindlewastes', '星火荒原', 'Kindlewastes', '曬透的砂岩方山、仙人掌與沙丘，峽谷底下滿是霧幕與 Fell。這裡從來不下雨。', '烈焰 5', '21–27', '9 km²', '528–1,288 m'],
-    ['albaneve-summits', '阿爾班伊維高峰', 'Albaneve Summits', '冰封山脈，Howling Peak 高 1,999 m。海拔 1,328 m 以上會受凍，是唯一需要保暖衣物的區域。', '烈焰 6–7', '28–35', '9.6 km²', '552–1,999 m'],
-    ['veilwater-basin', '面紗水盆地', 'Veilwater Basin', '熱帶湖泊、沙灘與叢林，石灰岩天然拱門下藏著遺跡。湖水是全圖最大片沒被霧幕污染的水域，Drak 族只住在這裡。', '烈焰 8–9', '37–45', '8 km²', '520–1,285 m'],
-    ['cinders-cradle', '餘燼搖籃', "Cinder's Cradle・1.0 新區域", '地圖最北端。地面是熔岩與遺跡，天上是遠古族的浮空群島；Ancient Constructs 是這裡專屬的勢力。最終 BOSS 所在的 Mother Flame\'s Domicile 高 2,529 m，是全圖最高點。', '烈焰 10–11', '46–48', '7.5 km²', '565–2,529 m'],
-  ];
-  const track = $('#biomeTrack');
-  track.innerHTML = REGIONS.map(r => `<article class="biome${r[0] === 'cinders-cradle' ? ' biome-new' : ''}"><img src="media/bg/${r[0]}.jpg" alt="${r[1]}的遊戲畫面" loading="lazy"><div class="biome-copy"><h3>${r[1]}</h3><p class="b-en">${r[2]}</p><p>${r[3]}</p><dl class="facts"><div><dt>開啟</dt><dd>${r[4]}</dd></div><div><dt>敵人等級</dt><dd>${r[5]}</dd></div><div><dt>面積</dt><dd>${r[6]}</dd></div><div><dt>海拔</dt><dd>${r[7]}</dd></div></dl></div></article>`).join('');
-  const worldIntro = $('.world-intro'), video = $('.world-video'), biomes = $('#biomes'), bar = $('#biomeBar');
-  const trackMax = () => { const last = track.lastElementChild; return Math.max(0, last.offsetLeft + last.offsetWidth + parseFloat(getComputedStyle(track).paddingLeft) - innerWidth); };
-  function sizeBiomes() { biomes.style.height = isMobile() ? '' : (trackMax() + innerHeight * 1.25) + 'px'; }
+  /* ---------- WORLD ---------- */
+  const worldIntro = $('.world-intro'), video = $('.world-video');
   function renderWorld() {
     const r = worldIntro.getBoundingClientRect();
     const t = clamp(1 - r.bottom / (innerHeight + r.height), 0, 1);
     video.style.setProperty('--vz', (1.14 - 0.12 * t).toFixed(4));
-    if (isMobile()) return;
-    const e = clamp((progressOf(biomes) - 0.08) / 0.84, 0, 1);
-    track.style.transform = `translate3d(${-e * trackMax()}px,0,0)`;
-    bar.style.width = (e * 100) + '%';
   }
   new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !RM) video.play().catch(() => {}); else video.pause(); })).observe(worldIntro);
   if (RM) { video.removeAttribute('autoplay'); video.pause(); }
@@ -407,30 +429,20 @@
   }
   $$('.egg').forEach(b => b.addEventListener('click', () => b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true')));
 
-  /* ---------- NAV / FINALE ---------- */
-  const finale = $('.finale'), finBg = $('.finale-bg'), nav = $('#nav');
-  const navLinks = $$('.nav-links a');
-  const sections = navLinks.map(a => $(a.getAttribute('href')));
-  function renderNav() {
-    nav.classList.toggle('solid', scrollY > innerHeight * 0.6);
-    let cur = -1;
-    sections.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * 0.4) cur = i; });
-    navLinks.forEach((a, i) => a.classList.toggle('on', i === cur));
-    const fr = finale.getBoundingClientRect();
-    finBg.style.setProperty('--fz', (1.16 - 0.14 * clamp(1 - fr.bottom / (innerHeight + fr.height), 0, 1)).toFixed(4));
-  }
-
   /* ---------- loop ---------- */
   function frameLoop() {
     if (vis(cover)) renderCover();
     if (!RM && vis(parade)) renderParade();
+    if (vis(skills)) { if (!RM) renderSkillsTour(); stepVB(); }
     if (!RM && vis(loot)) drawLootFx(renderLoot(), true); else drawLootFx(null, false);
-    renderWorld(); renderStory(); renderNav(); sweepReveals();
+    if (!RM && vis(gearPin)) renderGear();
+    renderWorld(); renderStory(); renderBackdrop(); sweepReveals();
     requestAnimationFrame(frameLoop);
   }
-  function onResize() { coverFx.resize(); fog.resize(); lootFx.resize(); sizeBiomes(); sizeParade(); }
+  function sizeParade() { if (!RM) parade.style.height = `calc(100svh * ${(INTRO + NB * STEP + 1.3).toFixed(2)})`; }
+  function onResize() { coverFx.resize(); fog.resize(); lootFx.resize(); sizeParade(); sizeSkills(); sizeGear(); }
   addEventListener('resize', onResize);
-  addEventListener('load', sizeBiomes);
+  addEventListener('load', sizeGear);
   onResize();
   requestAnimationFrame(frameLoop);
 })();
