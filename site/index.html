@@ -1,57 +1,52 @@
 <!doctype html>
-<html lang="zh-Hant-TW" class="no-js">
+<html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
 <script>document.documentElement.classList.replace('no-js','js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>霧鎖王國 Enshrouded｜1.0 正式版介紹</title>
-<meta name="description" content="霧鎖王國 1.0：23 位 BOSS、243 個節點的技能樹、2,654 個寶箱、67 套護甲、七大區域與霧幕的故事。">
+<title>Enshrouded 1.0 — a scroll through Embervale</title>
+<meta name="description" content="Enshrouded 1.0: 23 bosses, a 243-node skill tree, chests full of legendary weapons, armor for every class, seven regions and the story of the Shroud.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@600;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="media/hero.jpg">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<a class="skip" href="#bosses">跳到主要內容</a>
+<a class="skip" href="#bosses">Skip to content</a>
 
-<header class="nav" id="nav">
-  <a class="nav-brand" href="#top" aria-label="霧鎖王國 回到頂端"><img src="media/logo.png" alt="Enshrouded 霧鎖王國" width="638" height="142"></a>
-  <nav class="nav-links" aria-label="頁面導覽">
-    <a href="#bosses">BOSS</a>
-    <a href="#skills">技能樹</a>
-    <a href="#loot">寶箱</a>
-    <a href="#gear">裝備</a>
-    <a href="#world">地形</a>
-    <a href="#story">故事</a>
-  </nav>
-  <a class="btn btn-solid nav-cta" href="https://store.steampowered.com/app/1203620/" target="_blank" rel="noopener">Steam 商店頁</a>
-</header>
+<div class="backdrop" aria-hidden="true">
+  <img data-bg="skills" src="media/ss14.jpg" alt="">
+  <img data-bg="loot" src="media/bg/hollow-halls.jpg" alt="">
+  <img data-bg="gear" src="media/ss13.jpg" alt="">
+  <img data-bg="world" src="media/ss09.jpg" alt="">
+  <img data-bg="story" src="media/bg/revelwood.jpg" alt="">
+  <img data-bg="finale" src="media/bg/cinders-cradle.jpg" alt="">
+</div>
 
 <main id="top">
 
-<!-- ============ 封面 ============ -->
-<section class="cover" aria-label="封面">
+<section class="cover" aria-label="Cover">
   <div class="cover-art" id="coverArt">
-    <img src="media/hero.jpg" alt="霧鎖王國主視覺：左側五名不同流派的玩家，右側霧幕大軍，中央 Fell Thunderbrute，上方是飛龍與遠古族的空島" width="2688" height="1520">
+    <img src="media/hero.jpg" alt="Enshrouded key art: five adventurers of different classes on the left, a Shroud horde on the right, the Fell Thunderbrute in the middle, and dragons and the Ancients' sky islands above" width="2688" height="1520">
   </div>
   <canvas class="fx" id="coverFx" aria-hidden="true"></canvas>
   <div class="cover-copy">
-    <h1><span class="sr">霧鎖王國 Enshrouded</span><img src="media/logo.png" alt="" width="638" height="142"></h1>
-    <p class="cover-lede">1.0 正式版已上線。登上遠古族的空島，親手終結這場霧幕之戰。</p>
-    <p class="cover-meta">1–16 人合作生存動作 RPG・PC／PS5・2026 年 10 月 15 日</p>
+    <h1><span class="sr">Enshrouded</span><img src="media/logo.png" alt="" width="638" height="142"></h1>
+    <p class="cover-lede">Version 1.0 is here. Climb to the Ancients' sky islands and end the war against the Shroud.</p>
+    <p class="cover-meta">Survival action RPG for 1–16 players · PC and PS5 · October 15, 2026</p>
     <div class="cover-actions">
-      <a class="btn btn-solid" href="https://store.steampowered.com/app/1203620/" target="_blank" rel="noopener">在 Steam 查看</a>
-      <a class="btn btn-ghost" href="#skills">跳過 BOSS 介紹</a>
+      <a class="btn btn-solid" href="https://store.steampowered.com/app/1203620/" target="_blank" rel="noopener">View on Steam</a>
+      <a class="btn btn-ghost" href="#skills">Skip the bosses</a>
     </div>
   </div>
-  <p class="cover-hint" aria-hidden="true">往下滾，走進霧幕</p>
+  <p class="cover-hint" aria-hidden="true">Scroll into the Shroud</p>
 </section>
 
-<!-- ============ 過渡 + BOSS 巡禮 ============ -->
 <section class="parade" id="bosses" aria-labelledby="bosses-h">
   <div class="pv">
     <div class="pv-bgs">
+      <img class="pv-bg" data-reg="shroud" src="media/bg/shroud.jpg" alt="" aria-hidden="true">
       <img class="pv-bg" data-reg="springlands" src="media/bg/springlands.jpg" alt="" aria-hidden="true">
       <img class="pv-bg" data-reg="revelwood" src="media/bg/revelwood.jpg" alt="" aria-hidden="true">
       <img class="pv-bg" data-reg="hollow-halls" src="media/bg/hollow-halls.jpg" alt="" aria-hidden="true">
@@ -63,282 +58,290 @@
     </div>
     <div class="pv-shade" aria-hidden="true"></div>
     <canvas class="fx" id="fogFx" aria-hidden="true"></canvas>
-
     <div class="pv-intro" id="pvIntro">
-      <h2 id="bosses-h">霧幕之下，23 位 BOSS</h2>
-      <p>從長春平原的靈藥井，一路到雲端之上的遠古城塞。</p>
+      <h2 id="bosses-h">23 bosses beneath the Shroud</h2>
+      <p>From the first Elixir Well in the Springlands to the Ancient citadel above the clouds.</p>
     </div>
-
-    <div class="pv-region" id="pvRegion" aria-hidden="true"><b></b><span></span></div>
-
+    <p class="pv-region" id="pvRegion" aria-hidden="true"></p>
     <ol class="boss-list" id="bossList">
       <li class="boss b-l" data-reg="springlands">
-        <img class="b-img" src="media/boss/fell-thunderbrute.webp" alt="Fell Thunderbrute 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Thunderbrute</h3><p class="b-where"><b>長春平原</b> Springlands<br>守著第一口靈藥井，Braelyn Bridge 東側</p></div>
+        <img class="b-img" src="media/boss/fell-thunderbrute.webp" alt="Fell Thunderbrute, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Thunderbrute</h3><p class="b-where"><b>Springlands</b><br>Guards the first Elixir Well, east of Braelyn Bridge</p></div>
       </li>
       <li class="boss b-r" data-reg="springlands">
-        <img class="b-img" src="media/boss/fell-striker.webp" alt="Fell Striker 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Striker</h3><p class="b-where"><b>長春平原</b> Springlands<br>Ferndale 西北；七個區域都可能撞見</p></div>
+        <img class="b-img" src="media/boss/fell-striker.webp" alt="Fell Striker, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Striker</h3><p class="b-where"><b>Springlands</b><br>North-west of Ferndale; can turn up in every region</p></div>
       </li>
       <li class="boss b-l" data-reg="springlands">
-        <img class="b-img" src="media/boss/scavenger-gorger-matron.webp" alt="Scavenger Gorger Matron 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Scavenger</span><h3>Scavenger Gorger Matron</h3><p class="b-where"><b>長春平原</b> Springlands<br>Hill of Scavengers</p></div>
+        <img class="b-img" src="media/boss/scavenger-gorger-matron.webp" alt="Scavenger Gorger Matron, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Scavenger</span><h3>Scavenger Gorger Matron</h3><p class="b-where"><b>Springlands</b><br>Hill of Scavengers</p></div>
       </li>
       <li class="boss b-r" data-reg="springlands">
-        <img class="b-img" src="media/boss/vukah-brawler.webp" alt="Vukah Brawler 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Vukah</span><h3>Vukah Brawler</h3><p class="b-where"><b>長春平原</b> Springlands<br>Vukah Ceremony Hill</p></div>
+        <img class="b-img" src="media/boss/vukah-brawler.webp" alt="Vukah Brawler, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Vukah</span><h3>Vukah Brawler</h3><p class="b-where"><b>Springlands</b><br>Vukah Ceremony Hill</p></div>
       </li>
       <li class="boss b-l" data-reg="springlands">
-        <img class="b-img" src="media/boss/direwolf.webp" alt="Direwolf 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Wildlife</span><h3>Direwolf</h3><p class="b-where"><b>長春平原</b> Springlands<br>Ancient Vault（Farmer）東側</p></div>
+        <img class="b-img" src="media/boss/direwolf.webp" alt="Direwolf, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Wildlife</span><h3>Direwolf</h3><p class="b-where"><b>Springlands</b><br>East of the Farmer&#x27;s Ancient Vault</p></div>
       </li>
       <li class="boss b-r" data-reg="revelwood">
-        <img class="b-img" src="media/boss/fell-critter-queen-i.webp" alt="Fell Critter Queen 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Critter Queen</h3><p class="b-where"><b>喧囂森林</b> Revelwood<br>Alchemist Tower 等多處，分 I／II 兩型</p></div>
+        <img class="b-img" src="media/boss/fell-critter-queen-i.webp" alt="Fell Critter Queen, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Critter Queen</h3><p class="b-where"><b>Revelwood</b><br>Alchemist Tower and eight other lairs</p></div>
       </li>
       <li class="boss b-l" data-reg="revelwood">
-        <img class="b-img" src="media/boss/armored-fell-thunderbrute.webp" alt="Armored Fell Thunderbrute 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Armored Fell Thunderbrute</h3><p class="b-where"><b>喧囂森林</b> Revelwood<br>Pike's Port 東側</p></div>
+        <img class="b-img" src="media/boss/armored-fell-thunderbrute.webp" alt="Armored Fell Thunderbrute, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Armored Fell Thunderbrute</h3><p class="b-where"><b>Revelwood</b><br>East of Pike&#x27;s Port</p></div>
       </li>
       <li class="boss b-r" data-reg="revelwood">
-        <img class="b-img" src="media/boss/fell-wispwyvern.webp" alt="Fell Wispwyvern 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Wispwyvern</h3><p class="b-where"><b>喧囂森林</b> Revelwood<br>The Pike，古都 Pikemead's Reach</p></div>
+        <img class="b-img" src="media/boss/fell-wispwyvern.webp" alt="Fell Wispwyvern, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Wispwyvern</h3><p class="b-where"><b>Revelwood</b><br>The Pike, in the old capital Pikemead&#x27;s Reach</p></div>
       </li>
       <li class="boss b-l" data-reg="hollow-halls">
-        <img class="b-img" src="media/boss/hollow-cyclops.webp" alt="Hollow Cyclops 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Hollow</span><h3>Hollow Cyclops</h3><p class="b-where"><b>Hollow Halls</b><br>喧囂森林、遊牧高地、星火荒原的 Hollow Halls</p></div>
+        <img class="b-img" src="media/boss/hollow-cyclops.webp" alt="Hollow Cyclops, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Hollow</span><h3>Hollow Cyclops</h3><p class="b-where"><b>Hollow Halls</b><br>Hollow Halls of the Revelwood, Nomad Highlands and Kindlewastes</p></div>
       </li>
       <li class="boss b-r" data-reg="nomad-highlands">
-        <img class="b-img" src="media/boss/scavenger-grizzler-matron.webp" alt="Scavenger Grizzler Matron 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Scavenger</span><h3>Scavenger Grizzler Matron</h3><p class="b-where"><b>遊牧高地</b> Nomad Highlands<br>Lupa's Lair</p></div>
+        <img class="b-img" src="media/boss/scavenger-grizzler-matron.webp" alt="Scavenger Grizzler Matron, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Scavenger</span><h3>Scavenger Grizzler Matron</h3><p class="b-where"><b>Nomad Highlands</b><br>Lupa&#x27;s Lair</p></div>
       </li>
       <li class="boss b-l" data-reg="nomad-highlands">
-        <img class="b-img" src="media/boss/fell-monstrosity.webp" alt="Fell Monstrosity 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Monstrosity</h3><p class="b-where"><b>遊牧高地</b> Nomad Highlands<br>Cradle of Dusk</p></div>
+        <img class="b-img" src="media/boss/fell-monstrosity.webp" alt="Fell Monstrosity, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Monstrosity</h3><p class="b-where"><b>Nomad Highlands</b><br>Cradle of Dusk</p></div>
       </li>
       <li class="boss b-r" data-reg="kindlewastes">
-        <img class="b-img" src="media/boss/fell-sicklescythe.webp" alt="Fell Sicklescythe 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Sicklescythe</h3><p class="b-where"><b>星火荒原</b> Kindlewastes<br>Brittlebush 的 Sun Temple</p></div>
+        <img class="b-img" src="media/boss/fell-sicklescythe.webp" alt="Fell Sicklescythe, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Sicklescythe</h3><p class="b-where"><b>Kindlewastes</b><br>The Sun Temple in Brittlebush</p></div>
       </li>
       <li class="boss b-l" data-reg="kindlewastes">
-        <img class="b-img" src="media/boss/fell-crimson-critter-queen.webp" alt="Fell Crimson Critter Queen 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Crimson Critter Queen</h3><p class="b-where"><b>星火荒原</b> Kindlewastes<br>Sapphire Strand 一帶，全圖 24 個出沒點</p></div>
+        <img class="b-img" src="media/boss/fell-crimson-critter-queen.webp" alt="Fell Crimson Critter Queen, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Crimson Critter Queen</h3><p class="b-where"><b>Kindlewastes</b><br>Sapphire Strand; 24 lairs across the map</p></div>
       </li>
       <li class="boss b-r" data-reg="albaneve-summits">
-        <img class="b-img" src="media/boss/scavenger-tyrant.webp" alt="Scavenger Tyrant 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Scavenger</span><h3>Scavenger Tyrant</h3><p class="b-where"><b>阿爾班伊維高峰</b> Albaneve Summits<br>Forge of Obsidia</p></div>
+        <img class="b-img" src="media/boss/scavenger-tyrant.webp" alt="Scavenger Tyrant, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Scavenger</span><h3>Scavenger Tyrant</h3><p class="b-where"><b>Albaneve Summits</b><br>Forge of Obsidia</p></div>
       </li>
       <li class="boss b-l" data-reg="albaneve-summits">
-        <img class="b-img" src="media/boss/cyclops.webp" alt="Cyclops 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Cyclops</span><h3>Cyclops</h3><p class="b-where"><b>阿爾班伊維高峰</b> Albaneve Summits<br>Cyclops Cave</p></div>
+        <img class="b-img" src="media/boss/cyclops.webp" alt="Cyclops, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Cyclops</span><h3>Cyclops</h3><p class="b-where"><b>Albaneve Summits</b><br>Cyclops Cave</p></div>
       </li>
       <li class="boss b-r" data-reg="albaneve-summits">
-        <img class="b-img" src="media/boss/fell-cyclops.webp" alt="Fell Cyclops 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Cyclops</h3><p class="b-where"><b>阿爾班伊維高峰</b> Albaneve Summits<br>阿爾班伊維高峰的靈藥井</p></div>
+        <img class="b-img" src="media/boss/fell-cyclops.webp" alt="Fell Cyclops, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Cyclops</h3><p class="b-where"><b>Albaneve Summits</b><br>The Albaneve Summits Elixir Well</p></div>
       </li>
       <li class="boss b-l" data-reg="albaneve-summits">
-        <img class="b-img" src="media/boss/ancient-s-p-d-r-construct.webp" alt="Ancient S.P.D.R. Construct 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Ancients</span><h3>Ancient S.P.D.R. Construct</h3><p class="b-where"><b>阿爾班伊維高峰</b> Albaneve Summits<br>Frontier Research Lab</p></div>
+        <img class="b-img" src="media/boss/ancient-s-p-d-r-construct.webp" alt="Ancient S.P.D.R. Construct, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Ancients</span><h3>Ancient S.P.D.R. Construct</h3><p class="b-where"><b>Albaneve Summits</b><br>Frontier Research Lab</p></div>
       </li>
       <li class="boss b-r" data-reg="albaneve-summits">
-        <img class="b-img" src="media/boss/fell-dragon-youngling.webp" alt="Fell Dragon Youngling 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Dragon Youngling</h3><p class="b-where"><b>阿爾班伊維高峰</b> Albaneve Summits<br>Howling Peak，海拔 1,999 m</p></div>
+        <img class="b-img" src="media/boss/fell-dragon-youngling.webp" alt="Fell Dragon Youngling, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Fell Dragon Youngling</h3><p class="b-where"><b>Albaneve Summits</b><br>Howling Peak, 1,999 m up</p></div>
       </li>
       <li class="boss b-l" data-reg="hollow-halls">
-        <img class="b-img" src="media/boss/hollow-titan.webp" alt="Hollow Titan 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Hollow</span><h3>Hollow Titan</h3><p class="b-where"><b>Hollow Halls</b><br>阿爾班伊維高峰的 Hollow Halls</p></div>
+        <img class="b-img" src="media/boss/hollow-titan.webp" alt="Hollow Titan, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Hollow</span><h3>Hollow Titan</h3><p class="b-where"><b>Hollow Halls</b><br>Hollow Halls of the Albaneve Summits</p></div>
       </li>
       <li class="boss b-r" data-reg="hollow-halls">
-        <img class="b-img" src="media/boss/hollow-wispwyvern.webp" alt="Hollow Wispwyvern 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Hollow</span><h3>Hollow Wispwyvern</h3><p class="b-where"><b>Hollow Halls</b><br>面紗水盆地的 Hollow Halls</p></div>
+        <img class="b-img" src="media/boss/hollow-wispwyvern.webp" alt="Hollow Wispwyvern, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Hollow</span><h3>Hollow Wispwyvern</h3><p class="b-where"><b>Hollow Halls</b><br>Hollow Halls of the Veilwater Basin</p></div>
       </li>
       <li class="boss b-l" data-reg="veilwater-basin">
-        <img class="b-img" src="media/boss/hydrakdal.webp" alt="Hydrak'Dal 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Drak</span><h3>Hydrak&#39;Dal</h3><p class="b-where"><b>面紗水盆地</b> Veilwater Basin<br>Historic Battleground，Drak 族首領</p></div>
+        <img class="b-img" src="media/boss/hydrakdal.webp" alt="Hydrak&#x27;Dal, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Drak</span><h3>Hydrak&#x27;Dal</h3><p class="b-where"><b>Veilwater Basin</b><br>Historic Battleground; leader of the Drak</p></div>
       </li>
       <li class="boss b-r" data-reg="cinders-cradle">
-        <img class="b-img" src="media/boss/vorgoth.webp" alt="Vorgoth 的遊戲模型" loading="lazy">
-        <div class="b-txt"><span class="b-fac">Fell</span><h3>Vorgoth</h3><p class="b-where"><b>餘燼搖籃</b> Cinder's Cradle<br>Mother Flame's Domicile，海拔 2,529 m</p><span class="b-phase">兩階段：Champion of the Shroud → The Wanderer's Vessel</span></div>
+        <img class="b-img" src="media/boss/vorgoth.webp" alt="Vorgoth, in-game model" loading="lazy">
+        <div class="b-txt"><span class="b-fac">Fell</span><h3>Vorgoth</h3><p class="b-where"><b>Cinder&#x27;s Cradle</b><br>Mother Flame&#x27;s Domicile, 2,529 m up</p><span class="b-phase">Two phases: Champion of the Shroud, then The Wanderer's Vessel</span></div>
       </li>
     </ol>
-
     <div class="pv-track" aria-hidden="true"><i id="pvBar"></i></div>
   </div>
 </section>
 
-<!-- ============ 技能樹 ============ -->
-<section class="skills" id="skills" aria-labelledby="skills-h">
-  <div class="wrap skills-head">
-    <h2 id="skills-h" data-rv>243 個節點，一棵樹</h2>
-    <p class="lede" data-rv>這是 1.0 遊戲檔案裡的完整技能樹：12 個起點火花、65 個屬性節點、123 個被動與 43 個主動技能。沒有職業鎖，十二個流派可以任意混搭。點選節點就能配點，最多 212 點。</p>
-  </div>
-  <div class="wrap skills-grid">
-    <div class="skills-side">
-      <div class="arch" id="archBtns" role="group" aria-label="流派"></div>
-      <div class="node-card" id="nodeCard" aria-live="polite">
-        <p class="nc-type" id="ncType">選一個節點</p>
-        <h3 id="ncName">Airborne Architect</h3>
-        <div class="nc-desc" id="ncDesc"></div>
-        <p class="nc-cost" id="ncCost"></p>
+<section class="skills sec" id="skills" data-bg="skills" aria-labelledby="skills-h">
+  <div class="sk-stage">
+    <div class="sk-side">
+      <h2 id="skills-h">One tree, twelve paths</h2>
+      <p class="sk-lede">The full 1.0 tree: 243 nodes, 212 points, no class lock. Keep scrolling to watch each archetype level up.</p>
+      <div class="sk-card" id="skCard" aria-live="polite">
+        <p class="sk-arch" id="skArch">Start</p>
+        <h3 id="skName">Airborne Architect</h3>
+        <div class="sk-desc" id="skDesc"></div>
+        <p class="sk-meta" id="skMeta"></p>
       </div>
-      <div class="build">
-        <div class="build-top"><strong id="buildPts">0 / 212 點</strong><button class="btn btn-ghost btn-sm" id="buildReset" type="button">重置</button></div>
-        <div class="meter" aria-label="分支點數">
-          <div class="m-row"><span>力量</span><div class="m-bar"><i id="mW"></i></div></div>
-          <div class="m-row"><span>智力</span><div class="m-bar"><i id="mM"></i></div></div>
-          <div class="m-row"><span>敏捷</span><div class="m-bar"><i id="mR"></i></div></div>
+      <div class="sk-steps" id="skSteps" aria-hidden="true"></div>
+      <div class="sk-build">
+        <p class="sk-pts"><strong id="buildPts">0</strong> / 212 points <button class="btn btn-ghost btn-sm" id="buildReset" type="button">Reset</button></p>
+        <div class="meter">
+          <div class="m-row"><span>Strength</span><div class="m-bar"><i id="mW"></i></div></div>
+          <div class="m-row"><span>Intelligence</span><div class="m-bar"><i id="mM"></i></div></div>
+          <div class="m-row"><span>Dexterity</span><div class="m-bar"><i id="mR"></i></div></div>
         </div>
-        <p class="build-name" id="buildName">從中央的火花開始點。</p>
       </div>
     </div>
-    <div class="tree-wrap">
-      <svg class="tree" id="tree" viewBox="-2900 -2900 5800 5800" role="group" aria-label="技能樹，可點選節點"></svg>
-      <div class="tree-zoom"><button class="btn btn-ghost btn-sm" id="treeAll" type="button">看全樹</button></div>
+    <div class="sk-tree">
+      <svg class="tree" id="tree" viewBox="-2900 -2900 5800 5800" role="group" aria-label="Skill tree. Select a node to learn it."></svg>
+      <p class="sk-hint" id="skHint">Click any lit node to take over and build your own.</p>
     </div>
   </div>
-  <p class="wrap src-note">技能名稱與敘述為遊戲原文（1.0，取自遊戲檔案整理的 enshrouded.tools）。舊存檔進入 1.0 會自動重置技能點。</p>
 </section>
 
-<!-- ============ 寶箱 ============ -->
 <section class="loot" id="loot" aria-labelledby="loot-h">
   <div class="loot-stage">
     <div class="chest-frame" id="chestFrame">
-      <img class="chest chest-closed" src="media/chest-closed.jpg" alt="霧幕下的遠古地窖裡，一只上鎖的金寶箱" width="1344" height="752">
-      <img class="chest chest-open" id="chestOpen" src="media/chest-open.jpg" alt="金寶箱打開，金光從箱中湧出" width="1344" height="752">
+      <img class="chest chest-closed" src="media/chest-closed.jpg" alt="A locked gold chest in an Ancient vault beneath the Shroud" width="1344" height="752">
+      <img class="chest chest-open" id="chestOpen" src="media/chest-open.jpg" alt="The gold chest bursts open in golden light" width="1344" height="752">
       <span class="keyglow" id="keyGlow" aria-hidden="true"></span>
       <span class="seam" id="seam" aria-hidden="true"></span>
     </div>
     <canvas class="fx" id="lootFx" aria-hidden="true"></canvas>
     <div class="flash" id="flash" aria-hidden="true"></div>
-
     <div class="loot-copy loot-copy-a" id="lootA">
-      <h2 id="loot-h">霧幕深處，總有一只箱子</h2>
-      <p>繼續往下滾，把它打開。</p>
+      <h2 id="loot-h">Somewhere in the Shroud, a chest is waiting</h2>
+      <p>Keep scrolling to open it.</p>
     </div>
     <div class="loot-copy loot-copy-b" id="lootB">
-      <h2>餘火之谷藏了 2,654 個寶箱</h2>
-      <p>木箱、銀箱、金箱，越稀有的越難拿。其中 230 個上了鎖，349 個藏在霧幕裡。掉落的裝備分成普通、罕見、稀有、史詩、傳說五個稀有度。</p>
+      <h2>A weapon for every class</h2>
+      <p>All six are new in 1.0 and can roll from Common up to Legendary. Each one hides in 144 placed chests, most of them in Cinder's Cradle.</p>
     </div>
-
-    <ul class="loot-cards" id="lootCards" aria-label="寶箱種類與數量">
-      <li class="lc r-com"><img src="media/chest-wooden.webp" alt=""><b>木寶箱</b><span class="lc-n" data-n="1279">1,279</span></li>
-      <li class="lc r-rare"><img src="media/chest-silver.webp" alt=""><b>銀寶箱</b><span class="lc-n" data-n="974">974</span></li>
-      <li class="lc r-legend"><img src="media/chest-gold.webp" alt=""><b>金寶箱</b><span class="lc-n" data-n="401">401</span></li>
+    <ul class="loot-cards" id="lootCards" aria-label="Weapons that can drop from chests">
+      <li class="lc c-warrior"><img src="media/weapons/greatsword-of-the-motherflame.webp" alt="" width="128" height="128"><b>Greatsword Of The Motherflame</b><span>Two-handed greatsword</span><small>Warrior</small></li>
+      <li class="lc c-warrior"><img src="media/weapons/claravintas-seedling-swinger.webp" alt="" width="128" height="128"><b>Claravinta&#x27;s Seedling Swinger</b><span>One-handed club</span><small>Warrior</small></li>
+      <li class="lc c-ranger"><img src="media/weapons/phoenix-bow.webp" alt="" width="128" height="128"><b>Phoenix Bow</b><span>Bow</span><small>Ranger</small></li>
+      <li class="lc c-ranger"><img src="media/weapons/daggers-of-liquid-light.webp" alt="" width="128" height="128"><b>Daggers Of Liquid Light</b><span>Daggers</span><small>Ranger</small></li>
+      <li class="lc c-mage"><img src="media/weapons/dragoncore-staff.webp" alt="" width="128" height="128"><b>Dragoncore Staff</b><span>Staff</span><small>Mage</small></li>
+      <li class="lc c-mage"><img src="media/weapons/andromes-wand.webp" alt="" width="128" height="128"><b>Androme&#x27;s Wand</b><span>Wand</span><small>Mage</small></li>
     </ul>
-    <p class="loot-note" id="lootNote">寶箱數量：七大區域合計，資料來自遊戲檔案（enshrouded.tools）。場景圖以遊戲內金寶箱為參考生成。</p>
   </div>
 </section>
 
-<!-- ============ 裝備 ============ -->
-<section class="gear" id="gear" aria-labelledby="gear-h">
-  <div class="wrap gear-head">
-    <h2 id="gear-h" data-rv>67 套護甲，30 套外觀</h2>
-    <p class="lede" data-rv>護甲分成戰士、遊俠、法師三條路線，從 5 級一路排到 45 級。同一套穿滿沒有額外加成，所以混搭不吃虧；外觀裝則完全不影響數值，只負責好看。</p>
-  </div>
-  <div class="wrap">
-    <div class="tabs" role="tablist" aria-label="護甲路線" id="gearTabs">
-      <button role="tab" aria-selected="true" data-cls="Warrior">戰士系</button>
-      <button role="tab" aria-selected="false" data-cls="Ranger">遊俠系</button>
-      <button role="tab" aria-selected="false" data-cls="Mage">法師系</button>
-      <button role="tab" aria-selected="false" data-cls="Other">通用</button>
+<section class="gear sec" id="gear" data-bg="gear" aria-labelledby="gear-h">
+  <div class="gear-pin" id="gearPin">
+  <div class="gear-stage">
+    <div class="gear-top">
+      <h2 id="gear-h">Armor that grows with you</h2>
+      <p class="gear-lv"><span>Item level</span><b id="gearLv">5</b></p>
     </div>
-    <p class="tab-note" id="gearNote"></p>
+    <div class="gear-cols" id="gearCols">
+      <article class="gcol" data-cls="Warrior"><p class="gc-cls">Warrior</p><p class="gc-attr">Strength · Constitution</p><div class="gc-body"></div></article>
+      <article class="gcol" data-cls="Ranger"><p class="gc-cls">Ranger</p><p class="gc-attr">Dexterity · Endurance</p><div class="gc-body"></div></article>
+      <article class="gcol" data-cls="Mage"><p class="gc-cls">Mage</p><p class="gc-attr">Intelligence · Spirit</p><div class="gc-body"></div></article>
+    </div>
+    <div class="gear-steps" id="gearSteps" aria-hidden="true"></div>
   </div>
-  <div class="ladder-wrap" role="tabpanel" aria-live="polite">
-    <ol class="ladder" id="ladder"></ol>
   </div>
-  <div class="wrap gear-feature">
-    <figure class="gf-shot" data-rv>
-      <img src="media/ss05.jpg" alt="兩名玩家身穿金色遠古裝甲站在餘燼搖籃的浮空島前" loading="lazy" width="1600" height="900">
-    </figure>
-    <div class="gf-copy">
+  <div class="wrap gear-more">
+    <div class="gm-copy">
       <h3 data-rv>Vorgoth's Soulbound Set</h3>
-      <p data-rv>1.0 最終 BOSS 的戰利品套裝。打倒 Vorgoth 第二階段 The Wanderer's Vessel，必定掉落 2–3 個 Vorgoth's Bound Essence，交給遠古研究員 Loraine Crim 才做得出來。全職業可穿，傳說稀有度。</p>
-      <dl class="facts" data-rv><div><dt>物理護甲</dt><dd>324</dd></div><div><dt>魔法護甲</dt><dd>325</dd></div><div><dt>職業</dt><dd>不限</dd></div></dl>
+      <p data-rv>The 1.0 endgame set. Beat Vorgoth's second phase, The Wanderer's Vessel, for 2–3 Vorgoth's Bound Essence, then have the Ancient Researcher Loraine Crim craft it. Any class can wear it; it only comes as Legendary.</p>
+      <dl class="facts" data-rv><div><dt>Physical armor</dt><dd>324</dd></div><div><dt>Magical armor</dt><dd>325</dd></div><div><dt>Sets in the game</dt><dd>67 + 30 cosmetic</dd></div></dl>
     </div>
-  </div>
-  <div class="wrap custom">
-    <figure data-rv><img src="media/ss18.jpg" alt="遊戲內的染色介面" loading="lazy" width="1600" height="900"><figcaption>染色：每件裝備都能換顏色。</figcaption></figure>
-    <figure data-rv><img src="media/ss10.jpg" alt="遊戲內寶石鍛造爐的鑲嵌介面" loading="lazy" width="1600" height="900"><figcaption>寶石鍛造爐：把寶石鑲進武器。</figcaption></figure>
+    <figure data-rv><img src="media/ss18.jpg" alt="The in-game dye menu" loading="lazy"><figcaption>Dye any piece of gear.</figcaption></figure>
+    <figure data-rv><img src="media/ss10.jpg" alt="The in-game Gem Forge socketing menu" loading="lazy"><figcaption>Socket gems at the Gem Forge.</figcaption></figure>
   </div>
 </section>
 
-<!-- ============ 地形 ============ -->
-<section class="world" id="world" aria-labelledby="world-h">
+<section class="world sec" id="world" data-bg="world" aria-labelledby="world-h">
   <div class="world-intro">
-    <video class="world-video" autoplay muted loop playsinline preload="metadata" poster="media/world-loop.jpg" aria-hidden="true">
-      <source src="media/world-loop.mp4" type="video/mp4">
-    </video>
-    <div class="world-intro-copy wrap">
-      <h2 id="world-h" data-rv>七大區域，整片大地都能挖</h2>
-      <p class="lede" data-rv>每塊地形都由體素組成，能挖、能拆、能蓋。烈焰等級決定你能走多遠，最北的餘燼搖籃要升到烈焰 10 才打得開。</p>
+    <video class="world-video" autoplay muted loop playsinline preload="metadata" poster="media/world-loop.jpg" aria-hidden="true"><source src="media/world-loop.mp4" type="video/mp4"></video>
+    <div class="wrap world-intro-copy">
+      <h2 id="world-h" data-rv>Seven regions, and you can dig through all of them</h2>
+      <p class="lede" data-rv>Every hill is made of voxels you can mine, tear down and build on. Your Flame level decides how far north you can go.</p>
     </div>
   </div>
-  <div class="biomes" id="biomes">
-    <div class="biome-sticky">
-      <div class="biome-track" id="biomeTrack"></div>
-      <div class="biome-progress" aria-hidden="true"><i id="biomeBar"></i></div>
-    </div>
+  <div class="wrap regions">
+    <article class="region" data-rv>
+      <img src="media/bg/springlands.jpg" alt="Springlands, in-game" loading="lazy">
+      <div class="region-copy"><h3>Springlands</h3><p class="r-sub">Includes the Low Meadows</p><p>Woods and meadows in the south-west. The Fell hold the Shrouded lowlands while Scavengers squat in ruined towns like Rookmore and Westcott. The Blacksmith, Alchemist, Carpenter, Farmer and Hunter all wait in Ancient Vaults here.</p>
+        <dl class="facts"><div><dt>Opens at</dt><dd>Flame 2</dd></div><div><dt>Enemy level</dt><dd>3–9</dd></div><div><dt>Area</dt><dd>8.4 km²</dd></div><div><dt>Altitude</dt><dd>567–1,402 m</dd></div></dl></div>
+    </article>
+    <article class="region region-r" data-rv>
+      <img src="media/bg/revelwood.jpg" alt="Revelwood, in-game" loading="lazy">
+      <div class="region-copy"><h3>Revelwood</h3><p class="r-sub">Includes the Blackmire swamp</p><p>Dense forest around Embervale&#x27;s old capital, Pikemead&#x27;s Reach. The Fell Wispwyvern appears nowhere else, and the region&#x27;s Vukah live only in the Blackmire.</p>
+        <dl class="facts"><div><dt>Opens at</dt><dd>Flame 3</dd></div><div><dt>Enemy level</dt><dd>11–15</dd></div><div><dt>Area</dt><dd>7.7 km²</dd></div><div><dt>Altitude</dt><dd>518–1,435 m</dd></div></dl></div>
+    </article>
+    <article class="region" data-rv>
+      <img src="media/bg/nomad-highlands.jpg" alt="Nomad Highlands, in-game" loading="lazy">
+      <div class="region-copy"><h3>Nomad Highlands</h3><p class="r-sub">Centre of the map</p><p>Limestone bluffs high above the Shroud, bordering every other region. The Pillars of Creation are two huge volcanoes tied to the Ancients; most of Embervale&#x27;s Vukah camp here.</p>
+        <dl class="facts"><div><dt>Opens at</dt><dd>Flame 4</dd></div><div><dt>Enemy level</dt><dd>16–20</dd></div><div><dt>Area</dt><dd>5 km²</dd></div><div><dt>Altitude</dt><dd>556–1,165 m</dd></div></dl></div>
+    </article>
+    <article class="region region-r" data-rv>
+      <img src="media/bg/kindlewastes.jpg" alt="Kindlewastes, in-game" loading="lazy">
+      <div class="region-copy"><h3>Kindlewastes</h3><p class="r-sub">South-east desert</p><p>Sun-baked sandstone mesas, cacti and dunes, with Shroud-filled canyons below. It never rains here.</p>
+        <dl class="facts"><div><dt>Opens at</dt><dd>Flame 5</dd></div><div><dt>Enemy level</dt><dd>21–27</dd></div><div><dt>Area</dt><dd>9 km²</dd></div><div><dt>Altitude</dt><dd>528–1,288 m</dd></div></dl></div>
+    </article>
+    <article class="region" data-rv>
+      <img src="media/bg/albaneve-summits.jpg" alt="Albaneve Summits, in-game" loading="lazy">
+      <div class="region-copy"><h3>Albaneve Summits</h3><p class="r-sub">Frozen mountains</p><p>Howling Peak rises to 1,999 m. Above 1,328 m the cold sets in, the only place where you need warm clothing.</p>
+        <dl class="facts"><div><dt>Opens at</dt><dd>Flame 6–7</dd></div><div><dt>Enemy level</dt><dd>28–35</dd></div><div><dt>Area</dt><dd>9.6 km²</dd></div><div><dt>Altitude</dt><dd>552–1,999 m</dd></div></dl></div>
+    </article>
+    <article class="region region-r" data-rv>
+      <img src="media/bg/veilwater-basin.jpg" alt="Veilwater Basin, in-game" loading="lazy">
+      <div class="region-copy"><h3>Veilwater Basin</h3><p class="r-sub">Tropical lakes</p><p>Beaches, jungle and ancient ruins under limestone arches. Its lakes are the largest water the Shroud never touched, and the Drak live nowhere else.</p>
+        <dl class="facts"><div><dt>Opens at</dt><dd>Flame 8–9</dd></div><div><dt>Enemy level</dt><dd>37–45</dd></div><div><dt>Area</dt><dd>8 km²</dd></div><div><dt>Altitude</dt><dd>520–1,285 m</dd></div></dl></div>
+    </article>
+    <article class="region region-new" data-rv>
+      <img src="media/bg/cinders-cradle.jpg" alt="Cinder&#x27;s Cradle, in-game" loading="lazy">
+      <div class="region-copy"><h3>Cinder&#x27;s Cradle</h3><p class="r-sub">New in 1.0</p><p>The far north. Lava and ruins below, the Ancients&#x27; floating islands above, guarded by Ancient Constructs. Mother Flame&#x27;s Domicile, at 2,529 m, is the highest point in Embervale.</p>
+        <dl class="facts"><div><dt>Opens at</dt><dd>Flame 10–11</dd></div><div><dt>Enemy level</dt><dd>46–48</dd></div><div><dt>Area</dt><dd>7.5 km²</dd></div><div><dt>Altitude</dt><dd>565–2,529 m</dd></div></dl></div>
+    </article>
   </div>
   <div class="wrap verbs">
-    <h3 class="verbs-h" data-rv>在這片大地上，你可以……</h3>
+    <h3 class="verbs-h" data-rv>Ways to cross Embervale</h3>
     <div class="verbs-grid">
-      <figure class="verb verb-big" data-rv><img src="media/ss06.jpg" alt="玩家張開滑翔翼飛越叢林遺跡" loading="lazy"><figcaption><b>滑翔</b>全地圖 118 道上升氣流、178 個彈跳墊，從遠古尖塔頂端起飛最快。</figcaption></figure>
-      <figure class="verb" data-rv><img src="media/ss04.jpg" alt="玩家建造的石造城堡基地" loading="lazy"><figcaption><b>建造</b>自由堆砌體素；1.0 的 Sparkworks 能接線做機關，Airborne Architect 讓你飛著蓋。</figcaption></figure>
-      <figure class="verb" data-rv><img src="media/ss11.jpg" alt="玩家用十字鎬開採礦脈" loading="lazy"><figcaption><b>挖掘</b>地形全部可挖，1,222 個鉤爪點、189 扇暗門與 59 道謎題等你找。</figcaption></figure>
-      <figure class="verb" data-rv><img src="media/ss17.jpg" alt="霧幕中兩名玩家持武器警戒" loading="lazy"><figcaption><b>潛入霧幕</b>霧幕裡有時限；78 個霧幕之根藏在最深處，打掉就給技能點。</figcaption></figure>
-      <figure class="verb" data-rv><img src="media/ss03.jpg" alt="夜晚山谷中的營火" loading="lazy"><figcaption><b>生存</b>烹飪、釣魚、補充食物增益。1.0 重做釣魚，任何水域都能釣到所有魚種。</figcaption></figure>
+      <figure class="verb verb-big" data-rv><img src="media/ss01.jpg" alt="Players gliding over a sunset valley" loading="lazy"><figcaption><b>Glide</b>Jump off an Ancient Spire and ride 118 updrafts across the map.</figcaption></figure>
+      <figure class="verb" data-rv><img src="media/ss06.jpg" alt="A player swinging on a grappling hook through jungle ruins" loading="lazy"><figcaption><b>Grappling hook</b>Swing across gaps from 1,222 grapple points.</figcaption></figure>
+      <figure class="verb" data-rv><img src="media/ss04.jpg" alt="A stone castle built by players" loading="lazy"><figcaption><b>Build</b>Place blocks freely. Sparkworks wires up contraptions in 1.0.</figcaption></figure>
+      <figure class="verb" data-rv><img src="media/ss11.jpg" alt="A player mining an ore vein with a pickaxe" loading="lazy"><figcaption><b>Dig</b>Mine through anything; 189 secret doors and 59 puzzles wait.</figcaption></figure>
+      <figure class="verb" data-rv><img src="media/ss17.jpg" alt="Two players on guard inside the Shroud" loading="lazy"><figcaption><b>Dive into the Shroud</b>A timer runs inside it. 78 Shroud Roots give skill points.</figcaption></figure>
     </div>
   </div>
 </section>
 
-<!-- ============ 故事 ============ -->
-<section class="story" id="story" aria-labelledby="story-h">
+<section class="story sec" id="story" data-bg="story" aria-labelledby="story-h">
   <div class="wrap story-head">
-    <h2 id="story-h" data-rv>霧幕是怎麼來的</h2>
-    <p class="lede" data-rv>故事散落在全地圖 501 份筆記裡。1.0 起每份都有英、德、中文語音旁白，可以排成清單，邊探索邊聽。</p>
+    <h2 id="story-h" data-rv>Where the Shroud came from</h2>
+    <p class="lede" data-rv>The story is spread over 501 lore notes. Since 1.0 every one is voiced in English, German and Mandarin, and you can queue them like an audiobook.</p>
   </div>
   <div class="wrap timeline" id="timeline">
     <div class="tl-year" aria-hidden="true"><span id="tlYear">492</span><small>D.A.</small></div>
     <div class="tl-bar" aria-hidden="true"><i id="tlFill"></i></div>
     <ol class="tl-list">
-      <li data-year="492" data-rv><h3>漫遊者的禮物</h3><p>一位披著斗篷、病懨懨的陌生人走進 Vorgoth 的王座廳，帶來一瓶發光的藍色萬靈藥，說這是遠古族藏起來的武器。Vorgoth 喝下後，覺得自己浮了起來。筆記裡稱他為 Mysterious Wanderer。</p><img class="tl-render" src="media/render-mysterious-wanderer.webp" alt="Mysterious Wanderer 的遊戲模型" loading="lazy"></li>
-      <li data-year="500" data-rv><h3>霧幕湧出</h3><p>學者 Balthazar 研究萬靈藥，發現它來自地底深處的微小真菌。同一年，一股霧氣從地底湧出，人們叫它霧幕。他相信霧幕就是那些真菌的孢子，是挖掘靈藥井時被喚醒的。</p></li>
-      <li data-year="503" data-rv><h3>古都陷落</h3><p>Vorgoth 率領 Rimgard 的大軍攻入 Meldore。士兵個個蒼白病弱，卻攻破了 Pikemead's Reach，國王 Gormander 遇害。</p><img class="tl-render" src="media/boss/vorgoth.webp" alt="Vorgoth 的遊戲模型" loading="lazy"></li>
-      <li data-year="505" data-rv><h3>首都升空</h3><p>遠古族發誓不再介入人類的戰爭，霧幕也讓他們分裂：有的選擇升空，有的選擇留下。Balthazar 寫道，遠古族的首都已經升到雲層之上，再也搆不著。</p></li>
-      <li data-year="508" data-rv><h3>燼火容器</h3><p>一群年輕的遠古族找上 Balthazar：把遠古之焰導入人類身體，造出能驅散霧幕的烈焰之子。鐵匠自願第一個走進燼火容器，沉睡到被重新喚醒的那天。</p></li>
-      <li data-year="現在" data-rv><h3>你醒了</h3><p>你從燼火容器中甦醒，成為 Flameborn。點燃烈焰祭壇、救回倖存者，一路往北，直到遠古城塞頂端的 Mother Flame's Domicile，與 Vorgoth 正面對決。</p></li>
+      <li data-year="492" data-rv><h3>The Wanderer's gift</h3><p>A cloaked, sickly stranger brings Vorgoth a glowing blue flask and calls it a weapon the Ancients had hidden. Vorgoth drinks and feels himself lift off the ground. The notes call the stranger the Mysterious Wanderer.</p><img class="tl-render" src="media/render-mysterious-wanderer.webp" alt="The Mysterious Wanderer, in-game model" loading="lazy"></li>
+      <li data-year="500" data-rv><h3>The Shroud rises</h3><p>The scholar Balthazar finds that the Elixir comes from tiny fungi deep underground. The same year a fog pours up from the depths. He comes to believe it is their spores, woken when the first Elixir Wells were dug.</p></li>
+      <li data-year="503" data-rv><h3>The capital falls</h3><p>Vorgoth leads Rimgard's pale, sick army into Meldore. They break into Pikemead's Reach and King Gormander is killed.</p><img class="tl-render" src="media/boss/vorgoth.webp" alt="Vorgoth, in-game model" loading="lazy"></li>
+      <li data-year="505" data-rv><h3>The Ancients rise</h3><p>The Ancients swear never to take a side again, and the Shroud splits them: some will rise, some will stay. Balthazar writes that their capital now floats above the clouds, out of reach.</p></li>
+      <li data-year="508" data-rv><h3>The Cinder Vessels</h3><p>Young Ancients bring Balthazar a plan: guide an Ancient Flame into a human body to make someone who can drive back the fog. The Blacksmith volunteers to be the first to sleep in a Cinder Vessel.</p></li>
+      <li data-year="Now" data-rv><h3>You wake up</h3><p>You climb out of a Cinder Vessel as a Flameborn. Light Flame Altars, rescue survivors and head north, all the way to Mother Flame's Domicile and Vorgoth.</p></li>
     </ol>
   </div>
   <div class="wrap eggs">
-    <h3 class="eggs-h" data-rv>彩蛋筆記</h3>
-    <p class="eggs-lede" data-rv>點一下筆記，翻到背面看答案。</p>
+    <h3 class="eggs-h" data-rv>Notes worth finding</h3>
+    <p class="eggs-lede" data-rv>Tap a note to turn it over.</p>
     <div class="egg-grid">
-      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>每個箱子都叫 Jeff？</b><span>1.0 開放替儲物箱命名後，開發團隊 Keen 自己的箱子取了什麼名字？</span></span><span class="egg-back"><b>對，就是 Jeff</b><span>Keen 把自家的箱子全叫 Jeff。黑沼澤的筆記裡也有一位 Jeff：把同伴推上詭異的彈跳裝置，自己再一頭栽進焦油坑。</span></span></button>
-      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>第一位 Flameborn 是誰？</b><span>在鐵匠之前，燼火容器先拿誰做了實驗？</span></span><span class="egg-back"><b>一隻叫 Igni 的老鼠</b><span>第一隻實驗鼠被燒焦了；第二隻 Igni 成功沉睡、不老不死，證明容器可行。筆記署名 Balthazar，507 D.A.<img src="media/render-rat.webp" alt="老鼠的遊戲模型" loading="lazy"></span></span></button>
-      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>神殿裡的旅人</b><span>黑沼澤的隱藏神殿裡，有位旅人看著巨大的門留下了一句感想。</span></span><span class="egg-back"><b>「高個子被高估了」</b><span>原文：Tall fellows are overrated. I'd love a stout, short king instead. 他還說，看到暗門的精巧機關，設計控的姪子一定會開心得不得了。</span></span></button>
-      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>龐德在念筆記？</b><span>1.0 的筆記語音有英、德、中三語，德語版請來了誰？</span></span><span class="egg-back"><b>Dietmar Wunder</b><span>丹尼爾・克雷格的德語配音員。把語言切成德文，等於請 007 念傳說給你聽。</span></span></button>
-      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>Vorgoth 留下了什麼？</b><span>他入侵餘燼搖籃時一路寫日記。集滿三篇，然後呢？</span></span><span class="egg-back"><b>往下挖</b><span>找到最後一篇日記後，在它正下方往下挖，會挖出一只隱藏寶箱。這是支線 Vorgoth's Ruminations。</span></span></button>
+      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>Every chest is called Jeff?</b><span>1.0 finally lets you name storage chests. What did Keen name theirs?</span></span><span class="egg-back"><b>Yes. Jeff.</b><span>And a lore note in the Blackmire blames another Jeff for pushing his friend onto one of those bouncy pads before landing face-first in tar himself.</span></span></button>
+      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>Who was the first Flameborn?</b><span>Before the Blacksmith, who slept in a Cinder Vessel?</span></span><span class="egg-back"><b>A rat named Igni</b><span>The first test rat was charred. The second, Igni, slept untouched by time and proved the vessel works. Balthazar, 507 D.A.<img src="media/render-rat.webp" alt="Rat, in-game model" loading="lazy"></span></span></button>
+      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>The traveller in the temple</b><span>A hidden temple in the Blackmire has huge doors. One visitor had opinions.</span></span><span class="egg-back"><b>"Tall fellows are overrated."</b><span>"I'd love a stout, short king instead." He also thinks his design-loving nephew would adore the secret doors.</span></span></button>
+      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>Is that James Bond?</b><span>Who reads the German lore notes in 1.0?</span></span><span class="egg-back"><b>Dietmar Wunder</b><span>Daniel Craig's German voice. Switch the language and 007 reads you the lore.</span></span></button>
+      <button class="egg" type="button" data-rv aria-pressed="false"><span class="egg-front"><b>What did Vorgoth leave behind?</b><span>He kept a diary while invading Cinder's Cradle. Find all three pages, then what?</span></span><span class="egg-back"><b>Dig</b><span>Dig straight down below his last note to unearth a hidden chest. That is the quest Vorgoth's Ruminations.</span></span></button>
     </div>
   </div>
 </section>
 
-<section class="finale" aria-labelledby="finale-h">
-  <img class="finale-bg" src="media/ss01.jpg" alt="" loading="lazy" aria-hidden="true">
+<section class="finale sec" data-bg="finale" aria-labelledby="finale-h">
   <div class="wrap finale-in">
-    <h2 id="finale-h" data-rv>餘火之谷在等你</h2>
-    <p class="lede" data-rv>單人或最多 16 人連線，PC 與 PS5 皆已推出。</p>
-    <a class="btn btn-solid btn-lg" href="https://store.steampowered.com/app/1203620/" target="_blank" rel="noopener" data-rv>前往 Steam 商店頁</a>
+    <h2 id="finale-h" data-rv>Embervale is waiting</h2>
+    <p class="lede" data-rv>Play alone or with up to 16 friends. Out now on PC and PS5.</p>
+    <a class="btn btn-solid btn-lg" href="https://store.steampowered.com/app/1203620/" target="_blank" rel="noopener" data-rv>Go to the Steam page</a>
   </div>
 </section>
 </main>
 
-<footer class="foot">
+<footer class="foot sec" data-bg="finale">
   <img class="foot-logo" src="media/logo.png" alt="Enshrouded" width="638" height="142" loading="lazy">
   <div class="wrap foot-grid">
-    <p>非官方粉絲介紹頁。《霧鎖王國 Enshrouded》及其截圖、預告片、角色模型與圖示之權利皆屬 Keen Games GmbH。</p>
-    <p>遊戲資料（BOSS、技能樹、寶箱數、護甲、區域數據）取自遊戲檔案整理站 enshrouded.tools（build 25988036）；敵人模型來自 enshrouded.tools 與 flameborn.wiki；區域背景為 Steam 商店截圖與官方預告片畫面；寶箱與物品圖示來自 wiki.eso-ui.com。</p>
-    <p>封面主視覺與寶箱場景為示意圖：以 GPT Image 2（經 Higgsfield）參考官方截圖、遊戲模型與遊戲內金寶箱生成，並非官方美術。故事與彩蛋整理自遊戲內筆記與 Keen 1.0 更新日誌。</p>
+    <p>An unofficial fan page. Enshrouded and its screenshots, trailers, models and icons belong to Keen Games GmbH.</p>
+    <p>Game data (bosses, skill tree, chests, weapons, armor, regions) comes from enshrouded.tools, which reads the game files (build 25988036). Boss models from enshrouded.tools and flameborn.wiki; backgrounds from the Steam page and official trailers.</p>
+    <p>The cover art and the chest scene are AI illustrations (GPT Image 2 via Higgsfield) based on official screenshots, in-game models and the in-game gold chest. They are not official art.</p>
   </div>
 </footer>
 <script src="main.js"></script>

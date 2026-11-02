@@ -2,15 +2,17 @@
 
 > 這是測試 goal 功能的測試：整個專案由 Hermes Agent 的 goal（持續目標）功能，依使用者一句需求逐步規劃、製作、驗證與修改而成。
 
-非官方的《霧鎖王國 Enshrouded》1.0 介紹網頁，單一靜態頁面，靠滾動切換內容：
+非官方的《霧鎖王國 Enshrouded》1.0 介紹網頁（英文版），單一靜態頁面，靠滾動切換內容，沒有導覽列：
 
 1. 封面主視覺
-2. 霧幕過渡與 23 位 BOSS 巡禮（左右交替出現，背景換成各自的區域）
-3. 1.0 遊戲原版技能樹（243 個節點，可點選配點）
-4. 開寶箱滾動動畫
-5. 67 套護甲清單
-6. 七大區域與玩法
+2. 霧幕過渡與 22 張 BOSS 卡巡禮（23 位 BOSS，左右交替出現，背景換成各自的區域）
+3. 1.0 遊戲原版技能樹：滾動時依序展示 12 個流派逐點升級的路線，看完後可自己點節點配點
+4. 開寶箱滾動動畫：打開後飛出六把各職業武器（雙手劍、單手棍、弓、匕首、法杖、魔杖）
+5. 戰士、遊俠、法師三欄護甲，隨滾動從 Lv 5 換到 Lv 45
+6. 七大區域（直向排列）與玩法：滑翔、勾爪、建造、挖掘、霧幕
 7. 故事時間軸與彩蛋
+
+所有段落的背景都是遊戲畫面，不使用純色底。
 
 ## 怎麼看
 
@@ -70,11 +72,12 @@ python -m http.server 8000 --directory site
 | 區域背景、世界影片 | Steam 商店頁的 1.0 上市預告片、Wake of the Water 預告片畫面與截圖（Keen Games） | `site/media/bg/`、`site/media/world-loop.*` |
 | BOSS 模型圖 | [enshrouded.tools](https://www.enshrouded.tools)、[flameborn.wiki](https://flameborn.wiki) 的遊戲模型渲染 | `site/media/boss/`、`site/media/render-*.webp` |
 | 技能圖示、護甲圖示 | [enshrouded.tools](https://www.enshrouded.tools)（取自遊戲檔案） | `site/media/skills/`、`site/media/armor/` |
-| 寶箱圖示 | [wiki.eso-ui.com](https://wiki.eso-ui.com/index.php/Enshrouded:Cinder%27s_Cradle) | `site/media/chest-*.webp` |
-| 字型 | Google Fonts：Noto Sans TC、Noto Serif TC（SIL Open Font License） | 執行時載入 |
+| 武器圖示 | [enshrouded.tools](https://www.enshrouded.tools/weapons)（取自遊戲檔案） | `site/media/weapons/` |
+| 金寶箱外觀參考 | [wiki.eso-ui.com](https://wiki.eso-ui.com/index.php/Enshrouded:Cinder%27s_Cradle) 的 Gold Chest 圖示（只作為 AI 生成寶箱場景的參考，不在 repo 內） | — |
+| 字型 | Google Fonts：Spectral、Source Sans 3（SIL Open Font License） | 執行時載入 |
 
 ### 遊戲資料
-- BOSS 清單、技能樹節點與連線、寶箱數、護甲套裝、區域數據：[enshrouded.tools](https://www.enshrouded.tools)（由遊戲檔案整理，build 25988036）
+- BOSS 清單、技能樹節點與連線、寶箱數、武器、護甲套裝、區域數據：[enshrouded.tools](https://www.enshrouded.tools)（由遊戲檔案整理，build 25988036）
 - 1.0 更新內容：Keen Games 1.0 changelog、Shockbyte、TheClick 整理文章
 - 故事與彩蛋：遊戲內筆記（經 flameborn.wiki、enshrouded.wiki.gg 整理）
 
