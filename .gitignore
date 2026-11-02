@@ -1,0 +1,12 @@
+# 下載原檔、AI 原圖、截圖與驗證輸出（不進版控）
+ref/
+gen/
+shots/
+.taste-skill/
+assets/
+steam.json
+*.mp4.part
+__pycache__/
+node_modules/
+.DS_Store
+Thumbs.db

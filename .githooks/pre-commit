@@ -1,0 +1,18 @@
+#!/bin/sh
+# AI disclosure + source attribution gate for the user's personal GitHub repos (installed by init-personal-repo.sh)
+root=$(git rev-parse --show-toplevel) || exit 1
+fail=0
+readme="$root/README.md"
+if [ ! -f "$readme" ]; then
+  echo "[pre-commit] 缺少 README.md" >&2; fail=1
+else
+  grep -q '^## AI 使用聲明' "$readme" || { echo "[pre-commit] README.md 缺少「## AI 使用聲明」區塊" >&2; fail=1; }
+  grep -q '使用模型' "$readme" || { echo "[pre-commit] README.md 的 AI 使用聲明缺少「使用模型」" >&2; fail=1; }
+  grep -q '^## 來源與參考' "$readme" || { echo "[pre-commit] README.md 缺少「## 來源與參考」區塊（沒有第三方來源也要寫明）" >&2; fail=1; }
+fi
+[ -f "$root/AI_CONTENT.md" ] || { echo "[pre-commit] 缺少 AI_CONTENT.md（AI 生成內容清單）" >&2; fail=1; }
+if [ "$fail" -ne 0 ]; then
+  echo "[pre-commit] commit 已被擋下：請補上 AI 標註與來源後再 commit。" >&2
+  exit 1
+fi
+exit 0
