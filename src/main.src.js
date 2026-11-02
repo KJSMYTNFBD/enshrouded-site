@@ -240,7 +240,11 @@
     if (opts.bump && !RM) { skCard.classList.remove('bump'); void skCard.offsetWidth; skCard.classList.add('bump'); }
   }
   function pop(n) { if (RM) return; n.el.classList.remove('pop'); void n.el.getBBox(); n.el.classList.add('pop'); }
-  function dimTo(k) { nodes.forEach(n => n.el.classList.toggle('dim', k >= 0 && n.arch !== k && n.t !== 0 && n.arch !== -1)); }
+  const archLabels = [...gA.children];
+  function dimTo(k) {
+    nodes.forEach(n => n.el.classList.toggle('dim', k >= 0 && n.arch !== k && n.t !== 0 && n.arch !== -1));
+    archLabels.forEach((l, i) => l.classList.toggle('hide', k >= 0 && i !== k));
+  }
   function zoomArch(k) {
     if (k < 0) { setVB([-2900, -2900, 5800, 5800]); return; }
     const a = ARCH[k][2] * Math.PI / 180, s = 3000;
@@ -327,6 +331,7 @@
     seam.style.setProperty('--s', p < 0.49 ? smooth(clamp((p - 0.3) / 0.17, 0, 1)).toFixed(3) : '0');
     flash.style.opacity = clamp(1 - Math.abs(p - 0.49) / 0.035, 0, 1).toFixed(3);
     openImg.style.opacity = p >= 0.49 ? 1 : 0;
+    frame.style.filter = isMobile() && p > 0.5 ? `brightness(${(1 - 0.5 * smooth(clamp((p - 0.52) / 0.12, 0, 1))).toFixed(3)})` : '';
     lootA.style.opacity = (1 - smooth(clamp((p - 0.22) / 0.1, 0, 1))).toFixed(3);
     const bIn = smooth(clamp((p - 0.6) / 0.1, 0, 1));
     lootB.style.opacity = bIn.toFixed(3); lootB.style.transform = `translateY(${(1 - bIn) * 20}px)`;

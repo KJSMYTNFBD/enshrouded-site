@@ -143,6 +143,8 @@ p{margin:0}
 .tree .nd:focus-visible .b{stroke:#fff;stroke-width:22}
 .tree .al{font:700 150px var(--sans);fill:var(--c);opacity:.9}
 .tree .dim{opacity:.25;transition:opacity .4s}
+.tree .al{transition:opacity .4s}
+.tree .al.hide{opacity:0}
 .sk-hint{margin-top:10px;text-align:center;font-size:15px;color:var(--ink-2)}
 
 /* ===== LOOT ===== */

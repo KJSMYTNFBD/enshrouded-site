@@ -1,6 +1,6 @@
 # NOTES
 
-- Repo：https://github.com/KJSMYTNFBD/enshrouded-site（private，不開 Pages）
+- Repo：https://github.com/KJSMYTNFBD/enshrouded-site（public，2026-11-02 由 private 改為 public；不開 Pages）
 - 用 commit 取代資料夾快照；每個修改開分支（`fix/…`、`feat/…`），完成後 merge 回 main 並打 tag。
 - 本機開發資料夾：`C:\Users\hyz92\projects\enshrouded-site`。`ref/`（下載原檔，約 280 MB）、`gen/`（AI 原圖）、`shots/` 不進版控。
 
